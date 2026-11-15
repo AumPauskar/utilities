@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#10131a">
+    <title>LaTeX to PDF — utilities</title>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- GIF encoder -->
+    <script src="lib/gif.js"></script>
+    <!-- React powers the shared application shell. The editor remains dependency-free. -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/latex.js@0.12.6/dist/latex.js"></script>
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <div id="reactSidebar"></div>
+
+    <div class="main-content">
+
+        <header class="topbar">
+            <a class="brand" href="index.html">
+                <span class="brand-mark">U</span>
+                <span>utilities</span>
+            </a>
+
+            <span class="local-pill">
+                <i></i> Runs locally in your browser
+            </span>
+        </header>
+
+        <main class="shell">
+
+    <section id="latexToolPage" class="tool-page document-tool-page">
+        <div class="tool-page-heading">
+            <div>
+                <p class="eyebrow">DOCUMENT TOOL 02</p>
+                <h1>LaTeX <span>to PDF.</span></h1>
+                <p class="subhead">Compose a clean mathematical document with live formula rendering, then save it as a PDF from the browser.</p>
+            </div>
+            <button id="latexPrint" class="primary-btn">Export as PDF <span>↗</span></button>
+        </div>
+        <div class="document-workspace">
+            <section class="document-editor-card">
+                <div class="document-card-head"><strong>LaTeX</strong><span>Browser compiler</span></div>
+                    <textarea id="latexInput" spellcheck="false" aria-label="LaTeX input">\documentclass[11pt]{article}
+\usepackage{multicol}
+\usepackage{hyperref}
+
+&#92;title{A small document}
+\author{utilities}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+This document is compiled from complete LaTeX source in your browser.
+
+\section{Mathematics}
+Inline math: $E = mc^2$. Display math:
+\[
+    \int_0^1 x^2 \, dx = \frac{1}{3}
+\]
+
+\section{Tables and columns}
+\begin{multicols}{2}
+LaTeX.js supports real document structure, lists, links, symbols, and multi-column text. Visit \href{https://latex.js.org}{latex.js.org} for the parser documentation.
+
+\begin{itemize}
+    \item Local browser compilation
+    \item Mathematical equations
+    \item Print-ready preview
+\end{itemize}
+\end{multicols}
+
+\end{document}</textarea>
+            </section>
+            <section class="document-preview-card">
+                <div class="document-card-head"><strong>Preview</strong><span>Ready to print</span></div>
+                <article id="latexPreview" class="document-preview latex-preview"></article>
+            </section>
+        </div>
+    </section>
+
+
+    <footer>
+        <span>utilities</span>
+        <span>Local processing · No account · No uploads</span>
+    </footer>
+        </main>
+    </div>
+</div>
+
+<script src="app.js"></script>
+<script src="document-tools.js"></script>
+
+</body>
+</html>

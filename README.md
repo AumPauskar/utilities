@@ -1,7 +1,14 @@
 
-# vid2gif
+# utilities
 
-A frontend-only video editing tool built with native browser APIs. I didn't build this shit, it's vibecoded
+A local-first collection of browser utilities. The first tool is Video to GIF,
+with video preview, trimming, cropping, and GIF export. It also includes
+Markdown to PDF and LaTeX to PDF document tools.
+
+The four pages are separate HTML files: `index.html` for the overview,
+`video-to-gif.html`, `markdown-to-pdf.html`, and `latex-to-pdf.html`. The
+overview carousel and shared sidebar are driven by the `utilitiesCatalog`
+registry in `app.js`.
 
 ## Features
 
@@ -13,6 +20,9 @@ A frontend-only video editing tool built with native browser APIs. I didn't buil
 - Convert video segments into GIF.
 - Configure GIF FPS and resolution.
 - Download processed files.
+- Live Markdown preview with browser PDF export.
+- LaTeX.js-powered document parsing with math, sections, lists, links, symbols,
+  and multi-column preview plus browser PDF export.
 
 ## Running locally
 
@@ -32,9 +42,14 @@ http://localhost:8000
 
 This project is compatible with GitHub Pages.
 
-No backend or build process is required.
+No backend or build process is required. The shared navigation shell uses React
+18 from its browser CDN while the editor continues to use native browser APIs.
 
 ## Privacy
 
 Video files are processed locally in the browser.
 No video upload endpoint exists.
+
+The LaTeX utility compiles through LaTeX.js in the browser. It supports a broad
+LaTeX subset, but packages or engine-specific features that LaTeX.js does not
+implement will need a full TeX engine such as pdfLaTeX, XeLaTeX, or LuaLaTeX.

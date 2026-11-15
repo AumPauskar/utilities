@@ -5,466 +5,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#10131a">
-    <title>vid2gif - Video Editor</title>
+    <title>utilities — Local browser tools</title>
 
     <link rel="stylesheet" href="styles.css">
 
     <!-- GIF encoder -->
     <script src="lib/gif.js"></script>
+    <!-- React powers the shared application shell. The editor remains dependency-free. -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/latex.js@0.12.6/dist/latex.js"></script>
 </head>
 
 <body>
 
-<header class="topbar">
-    <a class="brand" href="#">
-        <span class="brand-mark">F</span>
-        <span>vid2gif</span>
-    </a>
+<div class="app-layout">
 
-    <span class="local-pill">
-        <i></i> Runs locally in your browser
-    </span>
-</header>
+    <div id="reactSidebar"></div>
 
-<main class="shell">
+    <div class="main-content">
 
-    <section class="intro">
-        <p class="eyebrow">YOUR VIDEO WORKBENCH</p>
+        <header class="topbar">
+            <a class="brand" href="index.html">
+                <span class="brand-mark">U</span>
+                <span>utilities</span>
+            </a>
 
-        <h1>
-            Make the cut.<br>
-            <span>Keep it local.</span>
-        </h1>
+            <span class="local-pill">
+                <i></i> Runs locally in your browser
+            </span>
+        </header>
 
-        <p class="subhead">
-            Trim clips, crop the frame, and make GIFs
-            without uploading your videos anywhere.
-        </p>
-    </section>
+        <main class="shell">
 
-    <section class="workspace">
-
-        <!-- VIDEO PREVIEW -->
-        <div class="stage-column">
-
-            <div class="stage-head">
-                <div>
-                    <span class="step">01</span>
-                    <strong>Preview</strong>
-                </div>
-
-                <span id="fileMeta" class="muted">
-                    No video loaded
-                </span>
-            </div>
-
-            <div class="dropzone" id="dropzone">
-
-                <video id="video" playsinline></video>
-
-                <canvas id="previewCanvas"></canvas>
-
-                <div class="empty-state" id="emptyState">
-
-                    <div class="upload-icon">↑</div>
-
-                    <h2>Drop a video here</h2>
-
-                    <p>or choose a file from your device</p>
-
-                    <label class="primary-btn file-btn">
-                        Choose video
-                        <input
-                            id="fileInput"
-                            type="file"
-                            accept="video/*"
-                        >
-                    </label>
-
-                    <small>
-                        MP4 · WebM · MOV · MKV*
-                        · Other browser-supported formats
-                    </small>
-
-                </div>
-
-                <div class="stage-overlay" id="stageOverlay" hidden>
-
-                    <span id="timeReadout">00:00.0</span>
-
-                    <button
-                        id="playBtn"
-                        class="round-btn"
-                        aria-label="Play or pause"
-                    >
-                        ▶
-                    </button>
-
-                </div>
-
-            </div>
-
-            <div class="timeline">
-
-                <div class="time-row">
-                    <span id="currentTime">00:00.0</span>
-                    <span id="duration">00:00.0</span>
-                </div>
-
-                <input
-                    id="scrubber"
-                    type="range"
-                    min="0"
-                    max="1000"
-                    value="0"
-                    disabled
-                >
-
-            </div>
-
-            <div class="stage-foot">
-
-                <label class="secondary-btn file-btn">
-                    Replace video
-
-                    <input
-                        id="replaceInput"
-                        type="file"
-                        accept="video/*"
-                    >
-                </label>
-
-                <span class="muted">
-                    Original file is never modified.
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <!-- EDITING PANEL -->
-        <aside class="tools-column">
-
-            <div class="tabs">
-
-                <button class="tab active" data-tab="trim">
-                    ✂ <span>Trim</span>
-                </button>
-
-                <button class="tab" data-tab="crop">
-                    ▣ <span>Crop</span>
-                </button>
-
-                <button class="tab" data-tab="gif">
-                    ▤ <span>GIF</span>
-                </button>
-
-            </div>
-
-
-            <!-- TRIM -->
-            <section class="tool-panel active" id="panel-trim">
-
-                <p class="panel-kicker">EDIT 01</p>
-
-                <h2>Trim your clip</h2>
-
-                <p class="panel-desc">
-                    Choose the exact section you want to keep.
-                </p>
-
-                <div class="field-grid">
-
-                    <label>
-                        Start time
-
-                        <input
-                            id="trimStart"
-                            type="number"
-                            min="0"
-                            step="0.1"
-                            value="0"
-                        >
-                    </label>
-
-                    <label>
-                        End time
-
-                        <input
-                            id="trimEnd"
-                            type="number"
-                            min="0"
-                            step="0.1"
-                            value="0"
-                        >
-                    </label>
-
-                </div>
-
-                <div class="range-pair">
-
-                    <label>
-                        Start
-
-                        <input
-                            id="startRange"
-                            type="range"
-                            min="0"
-                            max="1000"
-                            value="0"
-                        >
-                    </label>
-
-                    <label>
-                        End
-
-                        <input
-                            id="endRange"
-                            type="range"
-                            min="0"
-                            max="1000"
-                            value="1000"
-                        >
-                    </label>
-
-                </div>
-
-                <div class="info-line">
-                    <span>Selected duration</span>
-                    <strong id="selectedDuration">—</strong>
-                </div>
-
-                <button
-                    id="exportTrim"
-                    class="primary-btn wide"
-                    disabled
-                >
-                    Export trimmed video <span>↗</span>
-                </button>
-
-                <p class="hint">
-                    Exports as WebM. Audio is included when supported
-                    by the browser.
-                </p>
-
-            </section>
-
-
-            <!-- CROP -->
-            <section class="tool-panel" id="panel-crop">
-
-                <p class="panel-kicker">EDIT 02</p>
-
-                <h2>Crop the frame</h2>
-
-                <p class="panel-desc">
-                    Adjust the crop area using percentages
-                    of the original frame.
-                </p>
-
-                <div class="field-grid four">
-
-                    <label>
-                        Left %
-
-                        <input id="cropX" type="number"
-                            min="0" max="99" value="0">
-                    </label>
-
-                    <label>
-                        Top %
-
-                        <input id="cropY" type="number"
-                            min="0" max="99" value="0">
-                    </label>
-
-                    <label>
-                        Width %
-
-                        <input id="cropW" type="number"
-                            min="1" max="100" value="100">
-                    </label>
-
-                    <label>
-                        Height %
-
-                        <input id="cropH" type="number"
-                            min="1" max="100" value="100">
-                    </label>
-
-                </div>
-
-                <div class="crop-presets">
-
-                    <button data-ratio="original">Original</button>
-                    <button data-ratio="1:1">1:1</button>
-                    <button data-ratio="4:5">4:5</button>
-                    <button data-ratio="16:9">16:9</button>
-                    <button data-ratio="9:16">9:16</button>
-
-                </div>
-
-                <div class="info-line">
-                    <span>Output dimensions</span>
-                    <strong id="cropDimensions">—</strong>
-                </div>
-
-                <button
-                    id="exportCrop"
-                    class="primary-btn wide"
-                    disabled
-                >
-                    Export cropped video <span>↗</span>
-                </button>
-
-                <p class="hint">
-                    The crop is applied to the exported video.
-                </p>
-
-            </section>
-
-
-            <!-- GIF -->
-            <section class="tool-panel" id="panel-gif">
-
-                <p class="panel-kicker">EDIT 03</p>
-
-                <h2>Make a GIF</h2>
-
-                <p class="panel-desc">
-                    Create a looping animation from your clip.
-                </p>
-
-                <div class="field-grid">
-
-                    <label>
-                        Start (seconds)
-
-                        <input
-                            id="gifStart"
-                            type="number"
-                            min="0"
-                            step="0.1"
-                            value="0"
-                        >
-                    </label>
-
-                    <label>
-                        End (seconds)
-
-                        <input
-                            id="gifEnd"
-                            type="number"
-                            min="0"
-                            step="0.1"
-                            value="0"
-                        >
-                    </label>
-
-                </div>
-
-                <div class="field-grid">
-
-                    <label>
-                        Frame rate
-
-                        <select id="gifFps">
-                            <option value="8">8 FPS — Smaller</option>
-                            <option value="12" selected>
-                                12 FPS — Balanced
-                            </option>
-                            <option value="15">15 FPS — Smoother</option>
-                            <option value="20">20 FPS — Smooth</option>
-                        </select>
-                    </label>
-
-                    <label>
-                        Width
-
-                        <select id="gifWidth">
-                            <option value="320">320 px</option>
-                            <option value="480" selected>480 px</option>
-                            <option value="640">640 px</option>
-                            <option value="720">720 px</option>
-                        </select>
-                    </label>
-
-                </div>
-
-                <label class="check-row">
-                    <input type="checkbox" id="gifCrop" checked>
-                    Apply current crop settings
-                </label>
-
-                <div class="info-line">
-                    <span>Estimated frames</span>
-                    <strong id="gifFrames">—</strong>
-                </div>
-
-                <button
-                    id="exportGif"
-                    class="primary-btn wide"
-                    disabled
-                >
-                    Create GIF <span>↗</span>
-                </button>
-
-                <p class="hint">
-                    Short clips and lower resolutions export faster.
-                </p>
-
-            </section>
-
-        </aside>
-
-    </section>
-
-
-    <!-- EXPORT PROGRESS -->
-    <section class="progress-card" id="progressCard" hidden>
-
-        <div class="progress-top">
-            <strong id="progressTitle">Preparing export…</strong>
-            <span id="progressPercent">0%</span>
-        </div>
-
-        <div class="progress-track">
-            <div id="progressBar"></div>
-        </div>
-
-        <p id="progressMessage">
-            Keep this tab open while exporting.
-        </p>
-
-    </section>
-
-
-    <!-- DOWNLOAD RESULT -->
-    <section class="result-card" id="resultCard" hidden>
-
-        <div>
-            <span class="success-mark">✓</span>
-
-            <div>
-                <strong id="resultTitle">Export ready</strong>
-                <p id="resultMeta"></p>
-            </div>
-        </div>
-
-        <a id="downloadLink" class="primary-btn" download>
-            Download file ↓
-        </a>
-
-    </section>
-
+    <div id="reactLanding" class="react-landing"></div>
 
     <footer>
-        <span>vid2gif</span>
+        <span>utilities</span>
         <span>Local processing · No account · No uploads</span>
     </footer>
-
-</main>
+        </main>
+    </div>
+</div>
 
 <script src="app.js"></script>
 

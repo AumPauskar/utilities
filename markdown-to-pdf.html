@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#10131a">
+    <title>Markdown to PDF — utilities</title>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- GIF encoder -->
+    <script src="lib/gif.js"></script>
+    <!-- React powers the shared application shell. The editor remains dependency-free. -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/latex.js@0.12.6/dist/latex.js"></script>
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <div id="reactSidebar"></div>
+
+    <div class="main-content">
+
+        <header class="topbar">
+            <a class="brand" href="index.html">
+                <span class="brand-mark">U</span>
+                <span>utilities</span>
+            </a>
+
+            <span class="local-pill">
+                <i></i> Runs locally in your browser
+            </span>
+        </header>
+
+        <main class="shell">
+
+    <section id="markdownToolPage" class="tool-page document-tool-page">
+        <div class="tool-page-heading">
+            <div>
+                <p class="eyebrow">DOCUMENT TOOL 01</p>
+                <h1>Markdown <span>to PDF.</span></h1>
+                <p class="subhead">Write in Markdown, preview the result, and print a polished PDF without uploading your document.</p>
+            </div>
+            <button id="markdownPrint" class="primary-btn">Export as PDF <span>↗</span></button>
+        </div>
+        <div class="document-workspace">
+            <section class="document-editor-card">
+                <div class="document-card-head"><strong>Markdown</strong><span>Live editor</span></div>
+                <textarea id="markdownInput" spellcheck="false" aria-label="Markdown input"># A small document
+
+Write **Markdown** here and export it as a PDF.
+
+## Notes
+
+- Everything runs locally in your browser
+- Use headings, lists, links, quotes, and code blocks
+
+&gt; Your document never leaves this device.</textarea>
+            </section>
+            <section class="document-preview-card">
+                <div class="document-card-head"><strong>Preview</strong><span>Ready to print</span></div>
+                <article id="markdownPreview" class="document-preview"></article>
+            </section>
+        </div>
+    </section>
+
+    <footer>
+        <span>utilities</span>
+        <span>Local processing · No account · No uploads</span>
+    </footer>
+        </main>
+    </div>
+</div>
+
+<script src="app.js"></script>
+<script src="document-tools.js"></script>
+
+</body>
+</html>
