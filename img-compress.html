@@ -1,0 +1,202 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#10131a">
+    <title>Image Compressor — utilities</title>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <div id="reactSidebar"></div>
+
+    <div class="main-content">
+
+        <header class="topbar">
+            <a class="brand" href="index.html">
+                <span class="brand-mark">U</span>
+                <span>utilities</span>
+            </a>
+            <span class="local-pill">
+                <i></i> Runs locally in your browser
+            </span>
+        </header>
+
+        <main class="shell">
+
+    <section id="imgCompressPage">
+
+        <div class="tool-page-heading">
+            <div>
+                <p class="eyebrow">IMAGE TOOL 01</p>
+                <h1>Image <span>Compress.</span></h1>
+                <p class="subhead">Resize &amp; re-encode images in your browser. JPG, PNG, WebP, GIF, BMP, AVIF — nothing uploaded.</p>
+            </div>
+        </div>
+
+        <!-- Drop zone -->
+        <div id="imgDropzone" class="pdf-drop-zone" role="button" tabindex="0" aria-label="Drop images here or click to browse">
+            <div class="pdf-drop-inner" id="imgDropInner">
+                <div class="upload-icon">🖼</div>
+                <h2>Drop images here</h2>
+                <p>or click to browse — multiple files supported</p>
+                <small>Files stay on your device — never uploaded</small>
+            </div>
+            <input type="file" id="imgFileInput" accept="image/*" multiple aria-label="Select image files">
+        </div>
+
+        <!-- Controls (hidden until files loaded) -->
+        <div id="imgControls" hidden>
+
+            <!-- Settings row -->
+            <div class="pdf-settings-grid" style="margin-top:22px">
+
+                <div class="pdf-setting-card">
+                    <div class="pdf-setting-head">
+                        <strong>Output format</strong>
+                        <span id="fmtLabel" class="pdf-setting-value">JPEG</span>
+                    </div>
+                    <p class="hint">Choose the output container. JPEG is smallest for photos; PNG preserves transparency; WebP is best all-round.</p>
+                    <div class="pdf-level-presets" style="margin-top:14px">
+                        <button class="pdf-preset-btn active" data-fmt="jpeg">JPEG</button>
+                        <button class="pdf-preset-btn" data-fmt="png">PNG</button>
+                        <button class="pdf-preset-btn" data-fmt="webp">WebP</button>
+                    </div>
+                </div>
+
+                <div class="pdf-setting-card">
+                    <div class="pdf-setting-head">
+                        <strong>Quality</strong>
+                        <span id="imgQualityLabel" class="pdf-setting-value">80%</span>
+                    </div>
+                    <p class="hint">Higher quality = larger file. Applies to JPEG and WebP. PNG is lossless — this slider has no effect for PNG.</p>
+                    <div class="pdf-level-presets" style="margin-top:14px">
+                        <button class="pdf-preset-btn" data-qlevel="low">Low (60%)</button>
+                        <button class="pdf-preset-btn active" data-qlevel="medium">Medium (80%)</button>
+                        <button class="pdf-preset-btn" data-qlevel="high">High (92%)</button>
+                        <button class="pdf-preset-btn" data-qlevel="max">Max (100%)</button>
+                    </div>
+                    <div class="range-pair" style="margin-top:16px">
+                        <label>
+                            Custom: <strong id="imgQualityNum">80</strong>%
+                            <input type="range" id="imgQualitySlider" min="1" max="100" value="80" step="1">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="pdf-setting-card">
+                    <div class="pdf-setting-head">
+                        <strong>Resize</strong>
+                        <span id="resizeLabel" class="pdf-setting-value">Original size</span>
+                    </div>
+                    <p class="hint">Scale down dimensions proportionally. Halving dimensions quarters the pixel count and file size.</p>
+                    <div class="pdf-level-presets" style="margin-top:14px">
+                        <button class="pdf-preset-btn" data-rscale="0.25">25%</button>
+                        <button class="pdf-preset-btn" data-rscale="0.5">50%</button>
+                        <button class="pdf-preset-btn" data-rscale="0.75">75%</button>
+                        <button class="pdf-preset-btn active" data-rscale="1">Original</button>
+                    </div>
+                    <div class="range-pair" style="margin-top:16px">
+                        <label>
+                            Custom: <strong id="resizeNum">100</strong>%
+                            <input type="range" id="resizeSlider" min="5" max="100" value="100" step="5">
+                        </label>
+                    </div>
+                    <div class="field-grid" style="margin-top:14px">
+                        <label>
+                            Max width (px)
+                            <input type="number" id="maxWidth" placeholder="Unlimited" min="1" max="99999">
+                        </label>
+                        <label>
+                            Max height (px)
+                            <input type="number" id="maxHeight" placeholder="Unlimited" min="1" max="99999">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="pdf-setting-card">
+                    <div class="pdf-setting-head">
+                        <strong>Background fill</strong>
+                        <span id="bgLabel" class="pdf-setting-value">White</span>
+                    </div>
+                    <p class="hint">Applied when converting transparent images (PNG/WebP) to JPEG, which has no alpha channel.</p>
+                    <div class="pdf-level-presets" style="margin-top:14px">
+                        <button class="pdf-preset-btn active" data-bg="#ffffff">White</button>
+                        <button class="pdf-preset-btn" data-bg="#000000">Black</button>
+                        <button class="pdf-preset-btn" data-bg="transparent">Transparent</button>
+                    </div>
+                    <div class="field-grid" style="margin-top:14px">
+                        <label>
+                            Custom colour
+                            <input type="color" id="bgColorPicker" value="#ffffff" style="height:36px; padding:3px 5px; cursor:pointer;">
+                        </label>
+                        <label>
+                            Strip EXIF metadata
+                            <div class="check-row" style="margin:0; padding-top:6px">
+                                <input type="checkbox" id="stripExif" checked>
+                                <span>Strip on export</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Compress button -->
+            <button id="imgCompressBtn" class="primary-btn" style="padding:13px 28px; font-size:13px;">
+                Compress <span id="imgBtnCount">0 image</span> <span>↓</span>
+            </button>
+
+            <!-- Progress -->
+            <div id="imgProgress" class="progress-card" hidden>
+                <div class="progress-top">
+                    <span id="imgProgressLabel">Processing…</span>
+                    <span id="imgProgressPct">0%</span>
+                </div>
+                <div class="progress-track"><div id="imgProgressBar"></div></div>
+                <p id="imgProgressDetail" class="hint" style="margin-top:4px"></p>
+            </div>
+
+            <!-- Results table -->
+            <div id="imgResults" hidden>
+                <div class="img-results-header">
+                    <strong id="imgResultsTitle">Results</strong>
+                    <button id="imgDownloadAll" class="primary-btn" style="padding:9px 16px; font-size:12px;">
+                        Download all <span>↗</span>
+                    </button>
+                </div>
+                <div id="imgResultsList" class="img-results-list"></div>
+            </div>
+
+            <!-- Error -->
+            <div id="imgError" class="progress-card" hidden style="border-color:#5a2a2a; background:#1c1010;">
+                <strong style="color:#e06060; font-size:13px; display:block; margin-bottom:6px;">Error</strong>
+                <p id="imgErrorMsg" class="hint" style="color:#c08080;"></p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <footer>
+        <span>utilities</span>
+        <span>Local processing · No account · No uploads</span>
+    </footer>
+        </main>
+    </div>
+</div>
+
+<script src="app.js"></script>
+<script src="img-compress.js"></script>
+
+</body>
+</html>
