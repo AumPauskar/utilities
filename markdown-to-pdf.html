@@ -9,15 +9,13 @@
 
     <link rel="stylesheet" href="styles.css">
 
-    <!-- GIF encoder -->
-    <script src="lib/gif.js"></script>
     <!-- React powers the shared application shell. The editor remains dependency-free. -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="lib/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/latex.js@0.12.6/dist/latex.js"></script>
+    <script src="lib/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 
 <body>
@@ -46,7 +44,7 @@
             <div>
                 <p class="eyebrow">DOCUMENT TOOL 01</p>
                 <h1>Markdown <span>to PDF.</span></h1>
-                <p class="subhead">Write in Markdown, preview the result, and print a polished PDF without uploading your document.</p>
+                <p class="subhead">Write in Markdown, preview the result, and export a polished PDF without uploading your document.</p>
             </div>
             <button id="markdownPrint" class="primary-btn">Export as PDF <span>↗</span></button>
         </div>
@@ -65,7 +63,7 @@ Write **Markdown** here and export it as a PDF.
 &gt; Your document never leaves this device.</textarea>
             </section>
             <section class="document-preview-card">
-                <div class="document-card-head"><strong>Preview</strong><span>Ready to print</span></div>
+                <div class="document-card-head"><strong>Preview</strong><span>Ready to export</span></div>
                 <article id="markdownPreview" class="document-preview"></article>
             </section>
         </div>

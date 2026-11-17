@@ -108,15 +108,123 @@
         }
     }
 
+    async function ensureHtml2Pdf() {
+        if (window.html2pdf) return window.html2pdf;
+        return new Promise((resolve, reject) => {
+            const script = document.createElement("script");
+            script.src = "lib/html2pdf.bundle.min.js";
+            script.onload = () => {
+                if (window.html2pdf) resolve(window.html2pdf);
+                else reject(new Error("html2pdf failed to initialize."));
+            };
+            script.onerror = () => {
+                const cdnScript = document.createElement("script");
+                cdnScript.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+                cdnScript.onload = () => {
+                    if (window.html2pdf) resolve(window.html2pdf);
+                    else reject(new Error("html2pdf failed to initialize."));
+                };
+                cdnScript.onerror = () => reject(new Error("Failed to load PDF export library."));
+                document.head.appendChild(cdnScript);
+            };
+            document.head.appendChild(script);
+        });
+    }
+
+    function getPdfFilename(source, defaultName, regex) {
+        if (typeof source === "string" && regex) {
+            const match = source.match(regex);
+            if (match && match[1]) {
+                const clean = match[1].trim().toLowerCase()
+                    .replace(/[^a-z0-9]+/gi, "-")
+                    .replace(/^-+|-+$/g, "");
+                if (clean) return clean + ".pdf";
+            }
+        }
+        return defaultName;
+    }
+
+    async function exportToPdf(toolType) {
+        const isLatex = toolType === "latex";
+        const preview = isLatex ? $("latexPreview") : $("markdownPreview");
+        const button = isLatex ? $("latexPrint") : $("markdownPrint");
+        const input = isLatex ? $("latexInput") : $("markdownInput");
+
+        if (!preview || !button) return;
+
+        if (preview.classList.contains("compile-error-state")) {
+            alert("Please fix the compilation error before exporting to PDF.");
+            return;
+        }
+
+        if (!preview.textContent.trim()) {
+            alert("The document is empty. Please enter some content before exporting.");
+            return;
+        }
+
+        const originalBtnHtml = button.innerHTML;
+        button.disabled = true;
+        button.style.pointerEvents = "none";
+        button.innerHTML = 'Exporting PDF... <span aria-hidden="true">⏳</span>';
+
+        try {
+            await ensureHtml2Pdf();
+
+            const filename = isLatex
+                ? getPdfFilename(input ? input.value : "", "latex-document.pdf", /\\title\{([^}]+)\}/)
+                : getPdfFilename(input ? input.value : "", "markdown-document.pdf", /^#\s+([^\n#]+)/m);
+
+            const container = document.createElement("div");
+            container.className = "document-preview pdf-export-container" + (isLatex ? " latex-preview" : "");
+            container.innerHTML = preview.innerHTML;
+
+            const opt = {
+                margin: [15, 15, 15, 15],
+                filename: filename,
+                image: { type: "jpeg", quality: 0.98 },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    letterRendering: true,
+                    logging: false,
+                    backgroundColor: "#ffffff"
+                },
+                jsPDF: {
+                    unit: "mm",
+                    format: "a4",
+                    orientation: "portrait"
+                },
+                pagebreak: {
+                    mode: ["avoid-all", "css", "legacy"],
+                    avoid: [
+                        "h1", "h2", "h3", "h4", "h5", "h6",
+                        "blockquote", "pre", "table", "tr",
+                        ".katex-display", ".ltx_equation", ".ltx_tabular",
+                        ".ltx_title_document"
+                    ]
+                }
+            };
+
+            await html2pdf().set(opt).from(container).save();
+        } catch (error) {
+            console.error("PDF export error:", error);
+            alert("Failed to export PDF: " + (error.message || String(error)));
+        } finally {
+            button.disabled = false;
+            button.style.pointerEvents = "";
+            button.innerHTML = originalBtnHtml;
+        }
+    }
+
     if ($("markdownInput")) {
         $("markdownInput").addEventListener("input", updateMarkdownPreview);
-        $("markdownPrint").addEventListener("click", () => window.print());
+        $("markdownPrint").addEventListener("click", () => exportToPdf("markdown"));
         updateMarkdownPreview();
     }
 
     if ($("latexInput")) {
         $("latexInput").addEventListener("input", event => latexHtml(event.target.value));
-        $("latexPrint").addEventListener("click", () => window.print());
+        $("latexPrint").addEventListener("click", () => exportToPdf("latex"));
         latexHtml($("latexInput").value);
     }
 

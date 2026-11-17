@@ -308,6 +308,67 @@ body {
 .compile-error-state pre { white-space: pre-wrap; color: #7d3028; font: inherit; }
 .compile-error-state small { color: #9b5b52; font-family: inherit; }
 
+.document-preview.pdf-export-container {
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #182019 !important;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.document-preview.pdf-export-container h1,
+.document-preview.pdf-export-container h2,
+.document-preview.pdf-export-container h3,
+.document-preview.pdf-export-container h4 {
+    page-break-after: avoid;
+    break-after: avoid;
+}
+
+.document-preview.pdf-export-container blockquote,
+.document-preview.pdf-export-container pre,
+.document-preview.pdf-export-container table,
+.document-preview.pdf-export-container tr,
+.document-preview.pdf-export-container img,
+.document-preview.pdf-export-container .katex-display,
+.document-preview.pdf-export-container .ltx_equation,
+.document-preview.pdf-export-container .ltx_tabular {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+.document-preview.pdf-export-container pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+    padding: 10px 14px;
+    border-radius: 6px;
+    background: #eef2ea;
+}
+
+.document-preview.pdf-export-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+}
+
+.document-preview.pdf-export-container th,
+.document-preview.pdf-export-container td {
+    border: 1px solid #d4dad0;
+    padding: 7px 10px;
+    text-align: left;
+}
+
+.document-preview.pdf-export-container th {
+    background: #eef2ea;
+    font-weight: 600;
+}
+
+.document-preview.pdf-export-container .latex {
+    min-height: 0 !important;
+    color: #182019;
+}
+
 @media print {
     body { background: white; color: #182019; }
     body * { visibility: hidden; }

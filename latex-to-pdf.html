@@ -9,15 +9,17 @@
 
     <link rel="stylesheet" href="styles.css">
 
-    <!-- GIF encoder -->
-    <script src="lib/gif.js"></script>
     <!-- React powers the shared application shell. The editor remains dependency-free. -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="lib/katex.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script src="lib/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script src="lib/latex.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/latex.js@0.12.6/dist/latex.js"></script>
+    <script src="lib/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 
 <body>
@@ -86,7 +88,7 @@ LaTeX.js supports real document structure, lists, links, symbols, and multi-colu
 \end{document}</textarea>
             </section>
             <section class="document-preview-card">
-                <div class="document-card-head"><strong>Preview</strong><span>Ready to print</span></div>
+                <div class="document-card-head"><strong>Preview</strong><span>Ready to export</span></div>
                 <article id="latexPreview" class="document-preview latex-preview"></article>
             </section>
         </div>
