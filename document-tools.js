@@ -20,16 +20,17 @@
 
     function normalizeLatexColors(source) {
         return source
-            // LaTeX.js expects definecolor's final argument as a direct RGB list.
+            // Convert RGB (0-255) to latex.js's native rgb model (0.0-1.0).
             .replace(/\\definecolor\s*\{([^}]+)\}\s*\{RGB\}\s*\{([^}]+)\}/gi, (_, name, values) => {
                 const rgb = values.split(",").map(value => Number(value.trim()) / 255);
                 return rgb.length === 3 && rgb.every(Number.isFinite)
-                    ? "\\definecolor{" + name + "}{" + rgb.join(",") + "}"
+                    ? "\\definecolor{" + name + "}{rgb}{" + rgb.join(",") + "}"
                     : "";
             })
-            .replace(/\\definecolor\s*\{([^}]+)\}\s*\{HTML\}\s*\{([0-9a-f]{6})\}/gi, (_, name, value) => {
+            // Convert HTML hex to latex.js's native rgb model.
+            .replace(/\\definecolor\s*\{([^}]+)\}\s*\{HTML\}\s*\{([0-9a-fA-F]{6})\}/gi, (_, name, value) => {
                 const rgb = [0, 2, 4].map(index => parseInt(value.slice(index, index + 2), 16) / 255);
-                return "\\definecolor{" + name + "}{" + rgb.join(",") + "}";
+                return "\\definecolor{" + name + "}{rgb}{" + rgb.join(",") + "}";
             })
             // The color macros are built into LaTeX.js; these package declarations
             // otherwise make it try to load an unsupported native package.
@@ -47,7 +48,8 @@
             const body = prepared.slice(documentStart);
             const documentClass = preamble.match(/\\documentclass(?:\[[^\]]*\])?\{[^}]+\}/)?.[0] || "\\documentclass{article}";
             const packages = (preamble.match(/\\usepackage(?:\[[^\]]*\])?\{(?:multicol|hyperref)\}/gi) || []).join("\n");
-            const colors = preamble.match(/\\definecolor\{[^}]+\}\{[^}]+\}/g) || [];
+            // Extract colors after full RGB normalisation (already done above).
+            const colors = preamble.match(/\\definecolor\{[^}]+\}\{[^}]+\}\{[^}]+\}/g) || [];
             const metadata = preamble.match(/\\(?:title|author|date)\{[^}]*\}/g) || [];
             prepared = [documentClass, packages, colors.join("\n"), metadata.join("\n"), body].join("\n");
         }
@@ -55,25 +57,53 @@
         // LaTeX.js implements the core article document plus selected packages,
         // but not the native TeX packages used for page layout and box styling.
         prepared = prepared
+            // ── Unsupported packages ──────────────────────────────────────────
             .replace(/\\usepackage(?:\[[^\]]*\])?\{(?:geometry|fontenc|lmodern|microtype|graphicx|array|booktabs|tabularx|colortbl|amsmath|amssymb|tcolorbox|fancyhdr|titlesec|enumitem|pifont)\}\s*/gi, "")
-            .replace(/\\hypersetup\{[\s\S]*?\}\s*/g, "")
+            // ── hypersetup block (may span many lines) ────────────────────────
+            .replace(/\\hypersetup\s*\{[^{}]*(?:\{[^{}]*\}[^{}]*)?\}\s*/g, "")
+            // ── Page / layout commands ────────────────────────────────────────
             .replace(/\\pagecolor\{[^}]+\}/g, "")
-            .replace(/\\(?:pagestyle|fancyhf|headrulewidth|footrulewidth|headrule)\b[^\n]*/g, "")
+            .replace(/\\pagestyle\s*\{[^}]+\}/g, "")
+            .replace(/\\fancyhf\s*\{[^}]*\}/g, "")
+            .replace(/\\(?:headrulewidth|footrulewidth|headrule)\b[^\n]*/g, "")
             .replace(/\\fancy(?:head|foot)\s*\[[^\]]+\]\s*\{[\s\S]*?\}/g, "")
-            .replace(/\\(?:titleformat|titlespacing)\s*\n?[\s\S]*?\n\s*\}/g, "")
-            .replace(/\\(?:setlength|tcbuselibrary)\s*\{[\s\S]*?\}/g, "")
+            // ── \setlength / \setlist (may span lines, brace-balanced) ────────
+            .replace(/\\setlength\s*\{[^}]*\}\s*\{[^}]*\}/g, "")
+            .replace(/\\setlist\s*(?:\[[^\]]*\])?\s*\{[\s\S]*?\}/g, "")
+            // ── titlesec: \titleformat and \titlespacing (multi-line, optional args) ─
+            .replace(/\\titleformat\s*\{[^}]+\}[\s\S]*?(?=\\|\n\n|\\begin\{document\})/g, "")
+            .replace(/\\titlespacing\*?\s*\{[^}]+\}\s*\{[^}]+\}\s*\{[^}]+\}\s*\{[^}]+\}/g, "")
+            // ── tcolorbox ────────────────────────────────────────────────────
+            .replace(/\\tcbuselibrary\s*\{[^}]+\}/g, "")
             .replace(/\\newtcolorbox\s*\{[^}]+\}\s*\{[\s\S]*?\n\s*\}/g, "")
+            // ── Color HTML→float conversion (fallback for body occurrences) ───
             .replace(/\\definecolor\{([^}]+)\}\{HTML\}\{([0-9a-f]{6})\}/gi, (_, name, value) => {
-                const rgb = [0, 2, 4].map(index => parseInt(value.slice(index, index + 2), 16) / 255);
-                return "\\definecolor{" + name + "}{" + rgb.join(",") + "}";
+                const rgb = [0, 2, 4].map(i => parseInt(value.slice(i, i + 2), 16) / 255);
+                return "\\definecolor{" + name + "}{rgb}{" + rgb.join(",") + "}";
             })
+            // ── \titlerule → horizontal rule approximation ────────────────────
+            .replace(/\\titlerule(?:\[[^\]]*\])?/g, "")
+            // ── \textbar → literal pipe ───────────────────────────────────────
+            .replace(/\\textbar\b/g, "|")
+            // ── \texttimes → × ───────────────────────────────────────────────
+            .replace(/\\texttimes\b/g, "×")
+            // ── \hfill in a paragraph context → \hspace{fill} ─────────────────
+            // latex.js supports \hfill inside tabular/minipage; in plain text it
+            // can crash — replace with an em-space so alignment is approximated.
+            .replace(/\\hfill\b/g, "\\hspace{1em}")
+            // ── Custom environments → quote ───────────────────────────────────
             .replace(/\\begin\{(?:hero|metric|insight)\}/g, "\\begin{quote}")
             .replace(/\\end\{(?:hero|metric|insight)\}/g, "\\end{quote}")
+            // ── enumitem options on \begin{itemize} ──────────────────────────
             .replace(/\\begin\{itemize\}\s*\[[\s\S]*?\]/g, "\\begin{itemize}")
+            // ── tabularx → tabular ────────────────────────────────────────────
             .replace(/\\begin\{tabularx\}\{[^}]+\}/g, "\\begin{tabular}")
             .replace(/\\end\{tabularx\}/g, "\\end{tabular}")
+            // ── booktabs / colortbl ───────────────────────────────────────────
             .replace(/\\(?:toprule|midrule|bottomrule|rowcolors\s*\{[^}]+\}\{[^}]+\}\{[^}]+\}|rowcolor\s*\{[^}]+\})/g, "")
+            // ── pifont \ding → bullet ─────────────────────────────────────────
             .replace(/\\ding\{[^}]+\}/g, "•")
+            // ── Tint shorthand ────────────────────────────────────────────────
             .replace(/\\color\{white!\d+\}/g, "\\color{white}");
 
         return prepared;

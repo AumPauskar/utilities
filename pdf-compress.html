@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#10131a">
+    <title>PDF Compressor — utilities</title>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- pdf-lib for reading/writing PDFs; pako for deflate compression -->
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <div id="reactSidebar"></div>
+
+    <div class="main-content">
+
+        <header class="topbar">
+            <a class="brand" href="index.html">
+                <span class="brand-mark">U</span>
+                <span>utilities</span>
+            </a>
+            <span class="local-pill">
+                <i></i> Runs locally in your browser
+            </span>
+        </header>
+
+        <main class="shell">
+
+    <section id="pdfCompressPage" class="tool-page">
+
+        <div class="tool-page-heading">
+            <div>
+                <p class="eyebrow">DOCUMENT TOOL 03</p>
+                <h1>PDF <span>Compress.</span></h1>
+                <p class="subhead">Reduce PDF file size locally — images re-encoded in your browser, nothing uploaded.</p>
+            </div>
+        </div>
+
+        <!-- Drop zone -->
+        <div id="pdfDropzone" class="pdf-drop-zone" role="button" tabindex="0" aria-label="Drop a PDF here or click to browse">
+            <div class="pdf-drop-inner" id="pdfDropInner">
+                <div class="upload-icon">⬇</div>
+                <h2>Drop your PDF here</h2>
+                <p>or click to browse</p>
+                <small>File stays on your device — never uploaded</small>
+            </div>
+            <input type="file" id="pdfFileInput" accept=".pdf,application/pdf" aria-label="Select PDF file">
+        </div>
+
+        <!-- Controls (hidden until file loaded) -->
+        <div id="pdfControls" class="pdf-controls" hidden>
+
+            <div class="pdf-info-bar" id="pdfInfoBar"></div>
+
+            <div class="pdf-settings-grid">
+
+                <div class="pdf-setting-card">
+                    <div class="pdf-setting-head">
+                        <strong>Compression level</strong>
+                        <span id="qualityLabel" class="pdf-setting-value">Medium</span>
+                    </div>
+                    <p class="hint">Controls JPEG quality for embedded images. Lower = smaller file, more visible loss.</p>
+                    <div class="pdf-level-presets">
+                        <button class="pdf-preset-btn" data-level="low">Low (max size)</button>
+                        <button class="pdf-preset-btn active" data-level="medium">Medium</button>
+                        <button class="pdf-preset-btn" data-level="high">High (best quality)</button>
+                        <button class="pdf-preset-btn" data-level="extreme">Extreme</button>
+                    </div>
+                    <div class="range-pair" style="margin-top:18px">
+                        <label>
+                            Custom quality: <strong id="qualityNum">60</strong>%
+                            <input type="range" id="qualitySlider" min="1" max="100" value="60" step="1">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="pdf-setting-card">
+                    <div class="pdf-setting-head">
+                        <strong>Image resolution scale</strong>
+                        <span id="scaleLabel" class="pdf-setting-value">1×</span>
+                    </div>
+                    <p class="hint">Downsample images before re-encoding. 0.5× halves resolution, further shrinking the file.</p>
+                    <div class="pdf-level-presets">
+                        <button class="pdf-preset-btn" data-scale="0.25">0.25×</button>
+                        <button class="pdf-preset-btn" data-scale="0.5">0.5×</button>
+                        <button class="pdf-preset-btn" data-scale="0.75">0.75×</button>
+                        <button class="pdf-preset-btn active" data-scale="1">1× (original)</button>
+                    </div>
+                    <div class="range-pair" style="margin-top:18px">
+                        <label>
+                            Custom scale: <strong id="scaleNum">1.00</strong>×
+                            <input type="range" id="scaleSlider" min="0.1" max="1" value="1" step="0.05">
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Compress button -->
+            <button id="compressBtn" class="primary-btn" style="margin-top:4px; padding: 13px 28px; font-size:13px;">
+                Compress PDF <span>↓</span>
+            </button>
+
+            <!-- Progress -->
+            <div id="pdfProgress" class="progress-card" hidden>
+                <div class="progress-top">
+                    <span id="progressLabel">Compressing…</span>
+                    <span id="progressPct">0%</span>
+                </div>
+                <div class="progress-track"><div id="progressBar"></div></div>
+                <p id="progressDetail" class="hint" style="margin-top:4px"></p>
+            </div>
+
+            <!-- Result -->
+            <div id="pdfResult" class="result-card" hidden>
+                <div>
+                    <div class="success-mark">✓</div>
+                    <div>
+                        <strong id="resultLabel">Done</strong>
+                        <p id="resultDetail" class="hint"></p>
+                    </div>
+                </div>
+                <button id="downloadBtn" class="primary-btn">Download <span>↗</span></button>
+            </div>
+
+            <!-- Error -->
+            <div id="pdfError" class="progress-card" hidden style="border-color:#5a2a2a; background:#1c1010;">
+                <strong style="color:#e06060; font-size:13px; display:block; margin-bottom:6px;">Compression error</strong>
+                <p id="pdfErrorMsg" class="hint" style="color:#c08080;"></p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <footer>
+        <span>utilities</span>
+        <span>Local processing · No account · No uploads</span>
+    </footer>
+        </main>
+    </div>
+</div>
+
+<script src="app.js"></script>
+<script src="pdf-compress.js"></script>
+
+</body>
+</html>
