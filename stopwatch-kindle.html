@@ -1,139 +1,143 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stopwatch — Kindle Edition</title>
-    <style>
-        /* High contrast e-ink friendly styling - pure black and white, zero external assets */
+    <title>Stopwatch - Kindle Edition</title>
+    <style type="text/css">
+        /* CSS 2.1 ONLY - No flexbox, no grid, no CSS variables, no calc */
         body {
             background-color: #ffffff;
             color: #000000;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
             margin: 0;
-            padding: 14px;
+            padding: 10px;
+            font-size: 16px;
             line-height: 1.4;
         }
-        .container {
-            max-width: 650px;
+        .wrap {
+            max-width: 600px;
             margin: 0 auto;
         }
-        .header {
+        .top-banner {
             border-bottom: 3px solid #000000;
             padding-bottom: 8px;
             margin-bottom: 12px;
         }
-        .header h1 {
-            margin: 0 0 4px 0;
+        .top-banner h1 {
+            margin: 0;
             font-size: 26px;
             letter-spacing: -1px;
         }
-        .nav-links {
-            margin: 10px 0 16px 0;
-            padding: 8px 0;
-            border-bottom: 1px solid #000000;
-            border-top: 1px solid #000000;
-        }
-        .nav-link {
-            display: inline-block;
-            margin-right: 8px;
-            padding: 6px 12px;
-            border: 2px solid #000000;
-            background: #ffffff;
-            color: #000000;
-            text-decoration: none;
-            font-weight: bold;
+        .top-banner p {
+            margin: 4px 0 0 0;
             font-size: 13px;
         }
-        .nav-link.active {
-            background: #000000;
+        /* Navigation tabs */
+        .tab-bar {
+            border-bottom: 2px solid #000000;
+            margin-bottom: 16px;
+            padding-bottom: 6px;
+        }
+        .tab-btn {
+            display: inline-block;
+            padding: 8px 14px;
+            font-size: 15px;
+            font-weight: bold;
+            border: 2px solid #000000;
+            background-color: #ffffff;
+            color: #000000;
+            text-decoration: none;
+            margin-right: 6px;
+            margin-bottom: 4px;
+            cursor: pointer;
+        }
+        .tab-btn.active {
+            background-color: #000000;
             color: #ffffff;
         }
-        .display-box {
+        /* Clock / Digit Display Box */
+        .time-box {
             border: 4px solid #000000;
             padding: 24px 10px;
             text-align: center;
-            background: #ffffff;
-            margin-bottom: 16px;
+            background-color: #ffffff;
+            margin-bottom: 15px;
         }
-        .time-text {
+        .big-time {
             font-family: "Courier New", Courier, monospace;
-            font-size: 46px;
+            font-size: 52px;
             font-weight: bold;
             letter-spacing: 2px;
             margin: 0;
         }
-        .status-text {
+        .status-badge {
             font-size: 14px;
             font-weight: bold;
-            margin-top: 8px;
-            text-transform: uppercase;
             letter-spacing: 1px;
+            margin-top: 6px;
         }
-        .btn-row {
-            margin: 16px 0;
+        /* Control Buttons */
+        .controls-row {
             text-align: center;
+            margin: 15px 0;
         }
-        .btn {
+        .action-btn {
             display: inline-block;
             padding: 12px 22px;
-            font-size: 17px;
+            font-size: 18px;
             font-weight: bold;
             border: 2px solid #000000;
-            background: #ffffff;
+            background-color: #ffffff;
             color: #000000;
-            cursor: pointer;
             margin: 4px;
-            text-decoration: none;
-            -webkit-appearance: none;
+            cursor: pointer;
         }
-        .btn-primary {
-            background: #000000;
+        .action-btn.btn-dark {
+            background-color: #000000;
             color: #ffffff;
         }
-        .btn:disabled {
-            opacity: 0.35;
+        .action-btn:disabled {
+            color: #888888;
+            border-color: #888888;
             cursor: default;
         }
-        .settings-bar {
-            border: 1px solid #000000;
-            padding: 10px;
-            margin: 16px 0;
-            font-size: 13px;
-            background: #f8f8f8;
+        /* Card sections */
+        .card {
+            border: 2px solid #000000;
+            padding: 12px;
+            margin-bottom: 16px;
         }
-        .lap-table {
+        .card h3 {
+            margin: 0 0 8px 0;
+            font-size: 16px;
+            border-bottom: 1px solid #000000;
+            padding-bottom: 4px;
+        }
+        /* Table */
+        .data-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 12px;
+            margin-top: 10px;
             font-size: 14px;
         }
-        .lap-table th, .lap-table td {
+        .data-table th, .data-table td {
             border: 1px solid #000000;
-            padding: 8px 10px;
+            padding: 6px 8px;
             text-align: left;
         }
-        .lap-table th {
-            background: #000000;
+        .data-table th {
+            background-color: #000000;
             color: #ffffff;
-            font-weight: bold;
         }
-        .lap-empty {
-            border: 1px dashed #000000;
-            padding: 20px;
-            text-align: center;
-            font-size: 14px;
-            margin-top: 12px;
-        }
-        .footer {
-            margin-top: 30px;
-            padding-top: 12px;
+        /* Footer */
+        .foot {
+            margin-top: 25px;
+            padding-top: 10px;
             border-top: 2px solid #000000;
             font-size: 12px;
-            display: flex;
-            justify-content: space-between;
         }
-        .footer a {
+        .foot a {
             color: #000000;
             font-weight: bold;
         }
@@ -141,330 +145,212 @@
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
+<div class="wrap">
+    <div class="top-banner">
         <h1>Stopwatch</h1>
-        <div style="font-size: 13px;">Kindle &amp; Low-Power Edition · 1s Screen Refresh</div>
+        <p>Kindle &amp; E-Ink Edition &middot; 1s Ticks &middot; No Flashing</p>
     </div>
 
-    <div class="nav-links">
-        <a class="nav-link" href="kindle.html">Kindle Home</a>
-        <a class="nav-link active" href="stopwatch-kindle.html">Stopwatch</a>
-        <a class="nav-link" href="countdown-timer-kindle.html">Countdown Timer</a>
-        <a class="nav-link" href="stopwatch.html">Full Modern UI &rarr;</a>
+    <!-- Navigation -->
+    <div class="tab-bar">
+        <a class="tab-btn" href="kindle.html">Kindle Home</a>
+        <a class="tab-btn active" href="stopwatch-kindle.html">Stopwatch</a>
+        <a class="tab-btn" href="countdown-timer-kindle.html">Countdown Timer</a>
+        <a class="tab-btn" href="stopwatch.html" style="float: right;">Full Site &rarr;</a>
+        <div style="clear: both;"></div>
     </div>
 
-    <!-- Main Display -->
-    <div class="display-box">
-        <div id="timeDisplay" class="time-text">00:00:00</div>
-        <div id="statusLabel" class="status-text">[ READY ]</div>
-    </div>
-
-    <!-- Actions -->
-    <div class="btn-row">
-        <button id="btnStartPause" class="btn btn-primary">Start</button>
-        <button id="btnLap" class="btn" disabled>Lap</button>
-        <button id="btnReset" class="btn" disabled>Reset</button>
-    </div>
-
-    <!-- Kindle Refresh Settings -->
-    <div class="settings-bar">
-        <label>
-            <strong>Display Refresh Rate:</strong>
-            <select id="refreshRateSelect" style="margin-left: 8px; font-size: 13px; padding: 4px; border: 1px solid #000;">
-                <option value="1000" selected>1 second (Recommended for E-Ink)</option>
-                <option value="100">100 ms (Fast LCD refresh)</option>
-            </select>
-        </label>
-        <div style="font-size: 11px; margin-top: 4px; color: #444;">
-            * 1-second ticks protect Kindle e-ink screens from flashing and preserve battery.
+    <!-- STOPWATCH PANEL -->
+    <div>
+        <div class="time-box">
+            <div id="swDigits" class="big-time">00:00:00</div>
+            <div id="swStatus" class="status-badge">[ READY ]</div>
         </div>
-    </div>
 
-    <!-- Laps Section -->
-    <div style="margin-top: 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #000; padding-bottom: 6px;">
-            <strong style="font-size: 16px;">Recorded Laps (<span id="lapCountText">0</span>)</strong>
-            <div>
-                <button id="btnClearLaps" class="btn" style="padding: 4px 10px; font-size: 12px;" disabled>Clear</button>
-                <button id="btnCopyLaps" class="btn" style="padding: 4px 10px; font-size: 12px;" disabled>Copy</button>
+        <div class="controls-row">
+            <button id="swBtnStart" class="action-btn btn-dark" type="button" onclick="swToggle()">Start</button>
+            <button id="swBtnLap" class="action-btn" type="button" onclick="swRecordLap()" disabled>Lap</button>
+            <button id="swBtnReset" class="action-btn" type="button" onclick="swReset()" disabled>Reset</button>
+        </div>
+
+        <!-- Laps Table -->
+        <div class="card">
+            <h3>RECORDED LAPS (<span id="swLapCount">0</span>)</h3>
+            <div id="swLapEmpty" style="padding: 10px; text-align: center; font-size: 14px;">
+                No laps recorded yet. Press <b>Lap</b> while stopwatch is running.
+            </div>
+            <table id="swLapTable" class="data-table" style="display: none;">
+                <thead>
+                    <tr>
+                        <th style="width: 45px;">#</th>
+                        <th>Lap Split</th>
+                        <th>Total Time</th>
+                    </tr>
+                </thead>
+                <tbody id="swLapBody"></tbody>
+            </table>
+            <div style="margin-top: 8px; text-align: right;">
+                <button id="swBtnClear" class="action-btn" style="padding: 6px 12px; font-size: 13px;" type="button" onclick="swClearLaps()" disabled>Clear Laps</button>
             </div>
         </div>
-
-        <div id="lapEmptyState" class="lap-empty">
-            No laps recorded. Press <b>Lap</b> while stopwatch is running.
-        </div>
-
-        <table id="lapTable" class="lap-table" style="display: none;">
-            <thead>
-                <tr>
-                    <th style="width: 50px;">#</th>
-                    <th>Lap Split</th>
-                    <th>Total Time</th>
-                </tr>
-            </thead>
-            <tbody id="lapTableBody">
-            </tbody>
-        </table>
-
-        <!-- Fallback textarea for copying on older Kindle WebKit -->
-        <textarea id="copyHelperArea" style="position: absolute; left: -9999px;" aria-hidden="true"></textarea>
     </div>
 
-    <div class="footer">
-        <span>utilities · Kindle Edition</span>
-        <span><a href="stopwatch.html">Open Modern Version</a></span>
+    <div class="foot">
+        <div style="float: left;">utilities &middot; Kindle Edition</div>
+        <div style="float: right;"><a href="stopwatch.html">Open Modern Version</a></div>
+        <div style="clear: both;"></div>
     </div>
 </div>
 
-<script>
-// Pure ES3/ES5 JavaScript for universal compatibility on older Kindles
-(function() {
-    var isRunning = false;
-    var startTime = 0;
-    var elapsedTotal = 0;
-    var lastLapTotal = 0;
-    var timerInterval = null;
-    var tickMs = 1000;
-    var laps = []; // array of { num: n, lapMs: ms, totalMs: ms }
+<script type="text/javascript">
+function pad2(n) {
+    return (n < 10 ? "0" : "") + n;
+}
 
-    var timeDisplay = document.getElementById("timeDisplay");
-    var statusLabel = document.getElementById("statusLabel");
-    var btnStartPause = document.getElementById("btnStartPause");
-    var btnLap = document.getElementById("btnLap");
-    var btnReset = document.getElementById("btnReset");
-    var refreshRateSelect = document.getElementById("refreshRateSelect");
-    var lapTable = document.getElementById("lapTable");
-    var lapTableBody = document.getElementById("lapTableBody");
-    var lapEmptyState = document.getElementById("lapEmptyState");
-    var lapCountText = document.getElementById("lapCountText");
-    var btnClearLaps = document.getElementById("btnClearLaps");
-    var btnCopyLaps = document.getElementById("btnCopyLaps");
-    var copyHelperArea = document.getElementById("copyHelperArea");
+function getNow() {
+    return new Date().getTime();
+}
 
-    function pad(num) {
-        return (num < 10 ? "0" : "") + num;
+function formatHMS(ms) {
+    if (ms < 0) ms = 0;
+    var totalSec = Math.floor(ms / 1000);
+    var s = totalSec % 60;
+    var totalMin = Math.floor(totalSec / 60);
+    var m = totalMin % 60;
+    var h = Math.floor(totalMin / 60);
+    return pad2(h) + ":" + pad2(m) + ":" + pad2(s);
+}
+
+var swRunning = false;
+var swStartTime = 0;
+var swElapsed = 0;
+var swLastLap = 0;
+var swTimer = null;
+var swLaps = [];
+
+function swUpdateDisplay() {
+    var cur = swElapsed;
+    if (swRunning) {
+        cur += (getNow() - swStartTime);
+    }
+    document.getElementById("swDigits").innerHTML = formatHMS(cur);
+}
+
+function swToggle() {
+    if (swRunning) {
+        swRunning = false;
+        swElapsed += (getNow() - swStartTime);
+        if (swTimer) clearInterval(swTimer);
+        swTimer = null;
+
+        document.getElementById("swStatus").innerHTML = "[ PAUSED ]";
+        document.getElementById("swBtnStart").innerHTML = "Resume";
+        document.getElementById("swBtnStart").className = "action-btn btn-dark";
+        document.getElementById("swBtnLap").disabled = true;
+        swUpdateDisplay();
+    } else {
+        swRunning = true;
+        swStartTime = getNow();
+        document.getElementById("swStatus").innerHTML = "[ RUNNING ]";
+        document.getElementById("swBtnStart").innerHTML = "Pause";
+        document.getElementById("swBtnStart").className = "action-btn";
+        document.getElementById("swBtnLap").disabled = false;
+        document.getElementById("swBtnReset").disabled = false;
+
+        swTimer = setInterval(function() {
+            swUpdateDisplay();
+        }, 1000);
+        swUpdateDisplay();
+    }
+}
+
+function swReset() {
+    swRunning = false;
+    if (swTimer) clearInterval(swTimer);
+    swTimer = null;
+    swStartTime = 0;
+    swElapsed = 0;
+    swLastLap = 0;
+
+    document.getElementById("swStatus").innerHTML = "[ READY ]";
+    document.getElementById("swBtnStart").innerHTML = "Start";
+    document.getElementById("swBtnStart").className = "action-btn btn-dark";
+    document.getElementById("swBtnLap").disabled = true;
+    document.getElementById("swBtnReset").disabled = true;
+    swUpdateDisplay();
+    swClearLaps();
+}
+
+function swRecordLap() {
+    if (!swRunning) return;
+    var cur = swElapsed + (getNow() - swStartTime);
+    var lapSplit = cur - swLastLap;
+    swLastLap = cur;
+
+    swLaps.unshift({
+        num: swLaps.length + 1,
+        split: lapSplit,
+        total: cur
+    });
+
+    swRenderLaps();
+}
+
+function swRenderLaps() {
+    var countElem = document.getElementById("swLapCount");
+    var emptyElem = document.getElementById("swLapEmpty");
+    var tableElem = document.getElementById("swLapTable");
+    var bodyElem = document.getElementById("swLapBody");
+    var clearBtn = document.getElementById("swBtnClear");
+
+    countElem.innerHTML = swLaps.length;
+
+    if (swLaps.length === 0) {
+        emptyElem.style.display = "block";
+        tableElem.style.display = "none";
+        clearBtn.disabled = true;
+        bodyElem.innerHTML = "";
+        return;
     }
 
-    function formatTime(ms, includeFraction) {
-        if (ms < 0) ms = 0;
-        var totalSec = Math.floor(ms / 1000);
-        var s = totalSec % 60;
-        var totalMin = Math.floor(totalSec / 60);
-        var m = totalMin % 60;
-        var h = Math.floor(totalMin / 60);
+    emptyElem.style.display = "none";
+    tableElem.style.display = "table";
+    clearBtn.disabled = false;
 
-        var res = pad(h) + ":" + pad(m) + ":" + pad(s);
-        if (includeFraction) {
-            var tenths = Math.floor((ms % 1000) / 100);
-            res += "." + tenths;
-        }
-        return res;
+    var rows = "";
+    for (var i = 0; i < swLaps.length; i++) {
+        var item = swLaps[i];
+        rows += "<tr>";
+        rows += "<td>#" + item.num + "</td>";
+        rows += "<td><b>" + formatHMS(item.split) + "</b></td>";
+        rows += "<td>" + formatHMS(item.total) + "</td>";
+        rows += "</tr>";
     }
+    bodyElem.innerHTML = rows;
+}
 
-    function getNowMs() {
-        return new Date().getTime();
+function swClearLaps() {
+    swLaps = [];
+    swLastLap = swRunning ? (swElapsed + (getNow() - swStartTime)) : 0;
+    swRenderLaps();
+}
+
+document.onkeydown = function(e) {
+    var k = e.keyCode || e.which;
+    if (k === 32) { // Space
+        swToggle();
+        if (e.preventDefault) e.preventDefault();
+        return false;
     }
-
-    function getCurrentElapsed() {
-        if (isRunning) {
-            return elapsedTotal + (getNowMs() - startTime);
-        }
-        return elapsedTotal;
+    if (k === 76 || k === 108) { // L
+        swRecordLap();
     }
-
-    function updateDisplay() {
-        var elapsed = getCurrentElapsed();
-        var showFraction = tickMs < 1000;
-        timeDisplay.innerHTML = formatTime(elapsed, showFraction);
+    if (k === 82 || k === 114) { // R
+        swReset();
     }
+};
 
-    function startTimer() {
-        if (isRunning) return;
-        isRunning = true;
-        startTime = getNowMs();
-        statusLabel.innerHTML = "[ RUNNING ]";
-        btnStartPause.innerHTML = "Pause";
-        btnStartPause.className = "btn";
-        btnLap.disabled = false;
-        btnReset.disabled = false;
-
-        timerInterval = setInterval(function() {
-            updateDisplay();
-        }, tickMs);
-    }
-
-    function pauseTimer() {
-        if (!isRunning) return;
-        isRunning = false;
-        elapsedTotal += (getNowMs() - startTime);
-        clearInterval(timerInterval);
-        timerInterval = null;
-
-        statusLabel.innerHTML = "[ PAUSED ]";
-        btnStartPause.innerHTML = "Resume";
-        btnStartPause.className = "btn btn-primary";
-        btnLap.disabled = true;
-        updateDisplay();
-    }
-
-    function resetTimer() {
-        isRunning = false;
-        if (timerInterval) {
-            clearInterval(timerInterval);
-            timerInterval = null;
-        }
-        startTime = 0;
-        elapsedTotal = 0;
-        lastLapTotal = 0;
-
-        statusLabel.innerHTML = "[ READY ]";
-        btnStartPause.innerHTML = "Start";
-        btnStartPause.className = "btn btn-primary";
-        btnLap.disabled = true;
-        btnReset.disabled = true;
-        updateDisplay();
-        clearLaps();
-    }
-
-    function recordLap() {
-        if (!isRunning) return;
-        var nowElapsed = getCurrentElapsed();
-        var lapDuration = nowElapsed - lastLapTotal;
-        lastLapTotal = nowElapsed;
-
-        laps.unshift({
-            num: laps.length + 1,
-            lapMs: lapDuration,
-            totalMs: nowElapsed
-        });
-
-        renderLaps();
-    }
-
-    function renderLaps() {
-        lapCountText.innerHTML = laps.length;
-        if (laps.length === 0) {
-            lapEmptyState.style.display = "block";
-            lapTable.style.display = "none";
-            btnClearLaps.disabled = true;
-            btnCopyLaps.disabled = true;
-            lapTableBody.innerHTML = "";
-            return;
-        }
-
-        lapEmptyState.style.display = "none";
-        lapTable.style.display = "table";
-        btnClearLaps.disabled = false;
-        btnCopyLaps.disabled = false;
-
-        var html = "";
-        for (var i = 0; i < laps.length; i++) {
-            var item = laps[i];
-            html += "<tr>";
-            html += "<td>#" + item.num + "</td>";
-            html += "<td><b>" + formatTime(item.lapMs, true) + "</b></td>";
-            html += "<td>" + formatTime(item.totalMs, true) + "</td>";
-            html += "</tr>";
-        }
-        lapTableBody.innerHTML = html;
-    }
-
-    function clearLaps() {
-        laps = [];
-        lastLapTotal = isRunning ? getCurrentElapsed() : 0;
-        renderLaps();
-    }
-
-    function copyLaps() {
-        if (laps.length === 0) return;
-        var text = "";
-        for (var i = laps.length - 1; i >= 0; i--) {
-            var l = laps[i];
-            text += "Lap " + l.num + ": Split " + formatTime(l.lapMs, true) + " | Total " + formatTime(l.totalMs, true) + "\n";
-        }
-
-        // Try modern clipboard API first, fallback to textarea for Kindle
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(text).then(function() {
-                alert("Laps copied to clipboard!");
-            }).catch(function() {
-                fallbackCopy(text);
-            });
-        } else {
-            fallbackCopy(text);
-        }
-    }
-
-    function fallbackCopy(text) {
-        copyHelperArea.value = text;
-        copyHelperArea.focus();
-        copyHelperArea.select();
-        try {
-            document.execCommand("copy");
-            alert("Laps copied to clipboard!");
-        } catch(e) {
-            alert("Copy not supported on this browser. Here are your laps:\n\n" + text);
-        }
-    }
-
-    // Event listeners
-    btnStartPause.onclick = function() {
-        if (isRunning) {
-            pauseTimer();
-        } else {
-            startTimer();
-        }
-    };
-
-    btnLap.onclick = function() {
-        recordLap();
-    };
-
-    btnReset.onclick = function() {
-        resetTimer();
-    };
-
-    btnClearLaps.onclick = function() {
-        clearLaps();
-    };
-
-    btnCopyLaps.onclick = function() {
-        copyLaps();
-    };
-
-    refreshRateSelect.onchange = function() {
-        tickMs = parseInt(refreshRateSelect.value, 10) || 1000;
-        if (isRunning) {
-            clearInterval(timerInterval);
-            timerInterval = setInterval(function() {
-                updateDisplay();
-            }, tickMs);
-        }
-        updateDisplay();
-    };
-
-    // Keyboard support (e-ink bluetooth or physical keyboard like Kindle 3 Keyboard)
-    document.onkeydown = function(e) {
-        var key = e.keyCode || e.which;
-        // Space bar
-        if (key === 32) {
-            if (isRunning) pauseTimer(); else startTimer();
-            if (e.preventDefault) e.preventDefault();
-            return false;
-        }
-        // 'L' key
-        if (key === 76 || key === 108) {
-            if (isRunning) recordLap();
-        }
-        // 'R' key
-        if (key === 82 || key === 114) {
-            resetTimer();
-        }
-    };
-
-    updateDisplay();
-})();
+swUpdateDisplay();
 </script>
 
 </body>

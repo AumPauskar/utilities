@@ -6,27 +6,30 @@
     <meta name="theme-color" content="#10131a">
     <title>Countdown Timer — utilities</title>
 
-    <!-- Kindle / Legacy browser detection (runs before external scripts) -->
+    <!-- Kindle / Legacy browser detection (runs before any stylesheet or external script) -->
     <script>
-    if (navigator.userAgent && /Kindle|Silk\/|Kobo|EBRD/i.test(navigator.userAgent)) {
-        window.location.replace("countdown-timer-kindle.html");
-    }
+    (function() {
+        var ua = (navigator && navigator.userAgent) || "";
+        if (/Kindle|Silk|Touchpad|Kobo|EBRD|NetFront|Safari\/52|Safari\/53[0-3]|AppleWebKit\/52|AppleWebKit\/53[0-3]/i.test(ua)) {
+            try {
+                window.location.href = "countdown-timer-kindle.html";
+            } catch(e) {
+                window.location = "countdown-timer-kindle.html";
+            }
+        }
+    })();
     </script>
 
     <link rel="stylesheet" href="styles.css">
-
-    <!-- React powers the shared application shell -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 </head>
 
 <body>
 
-<noscript>
-    <div style="background:#1b2330; border-bottom:1px solid #364457; color:#f1f4fa; padding:12px; text-align:center; font-size:13px;">
-        Using an older browser or Kindle? <a href="countdown-timer-kindle.html" style="color:var(--accent,#a5f06b); font-weight:bold; text-decoration:underline; margin-left:6px;">Switch to the Kindle &amp; Low-Power Edition &rarr;</a>
-    </div>
-</noscript>
+<!-- Static fallback banner for Kindle / Low-Power browsers (zero JS required) -->
+<div id="kindleStaticNotice" style="background:#ffffff; color:#000000; border:3px solid #000000; padding:10px; margin:8px auto; max-width:650px; text-align:center; font-family:Arial,sans-serif; box-sizing:border-box;">
+    <strong style="font-size:16px;">Using a Kindle or e-reader?</strong>
+    <a href="countdown-timer-kindle.html" style="display:inline-block; padding:6px 14px; background:#000000; color:#ffffff; text-decoration:none; font-weight:bold; font-size:13px; margin-left:8px;">Open Kindle Countdown Timer &rarr;</a>
+</div>
 
 <div class="app-layout">
 
@@ -213,6 +216,9 @@
     </div>
 </div>
 
+<!-- Non-blocking scripts at bottom of body -->
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="app.js"></script>
 <script src="countdown-timer.js"></script>
 

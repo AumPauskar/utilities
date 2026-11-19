@@ -1,98 +1,186 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>utilities — Kindle Edition</title>
-    <style>
-        /* High contrast e-ink friendly styling - pure black and white, zero external assets */
+    <title>utilities - Kindle Edition</title>
+    <style type="text/css">
+        /* CSS 2.1 ONLY - No flexbox, no grid, no CSS variables, no calc */
         body {
             background-color: #ffffff;
             color: #000000;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
             margin: 0;
-            padding: 16px;
+            padding: 10px;
+            font-size: 16px;
             line-height: 1.4;
         }
-        .container {
-            max-width: 650px;
+        .wrap {
+            max-width: 600px;
             margin: 0 auto;
         }
-        .header {
+        .top-banner {
             border-bottom: 3px solid #000000;
-            padding-bottom: 12px;
-            margin-bottom: 20px;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
         }
-        .header h1 {
-            margin: 0 0 4px 0;
-            font-size: 28px;
+        .top-banner h1 {
+            margin: 0;
+            font-size: 26px;
             letter-spacing: -1px;
         }
-        .tagline {
-            font-size: 14px;
-            margin: 0;
-            font-style: italic;
-        }
-        .nav-links {
-            margin: 14px 0;
-            padding: 10px 0;
-            border-bottom: 1px solid #000000;
-            border-top: 1px solid #000000;
-        }
-        .nav-link {
-            display: inline-block;
-            margin-right: 12px;
-            padding: 6px 12px;
-            border: 2px solid #000000;
-            background: #ffffff;
-            color: #000000;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .nav-link.active {
-            background: #000000;
-            color: #ffffff;
-        }
-        .tool-card {
-            border: 2px solid #000000;
-            padding: 18px;
-            margin-bottom: 18px;
-            background: #ffffff;
-        }
-        .tool-card h2 {
-            margin: 0 0 8px 0;
-            font-size: 22px;
-        }
-        .tool-card p {
-            margin: 0 0 14px 0;
-            font-size: 15px;
-        }
-        .btn-launch {
-            display: inline-block;
-            padding: 10px 18px;
-            font-size: 16px;
-            font-weight: bold;
-            text-decoration: none;
-            border: 2px solid #000000;
-            background: #000000;
-            color: #ffffff;
-        }
-        .note-box {
-            border: 1px dashed #000000;
-            padding: 12px;
-            margin-top: 25px;
+        .top-banner p {
+            margin: 4px 0 0 0;
             font-size: 13px;
         }
-        .footer {
-            margin-top: 30px;
-            padding-top: 12px;
+        /* Navigation tabs */
+        .tab-bar {
+            border-bottom: 2px solid #000000;
+            margin-bottom: 16px;
+            padding-bottom: 6px;
+        }
+        .tab-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            font-size: 16px;
+            font-weight: bold;
+            border: 2px solid #000000;
+            background-color: #ffffff;
+            color: #000000;
+            text-decoration: none;
+            margin-right: 6px;
+            margin-bottom: 4px;
+            cursor: pointer;
+        }
+        .tab-btn.active {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        /* Clock / Digit Display Box */
+        .time-box {
+            border: 4px solid #000000;
+            padding: 20px 10px;
+            text-align: center;
+            background-color: #ffffff;
+            margin-bottom: 15px;
+        }
+        .big-time {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 52px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+        .status-badge {
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-top: 6px;
+        }
+        /* Control Buttons */
+        .controls-row {
+            text-align: center;
+            margin: 15px 0;
+        }
+        .action-btn {
+            display: inline-block;
+            padding: 12px 22px;
+            font-size: 18px;
+            font-weight: bold;
+            border: 2px solid #000000;
+            background-color: #ffffff;
+            color: #000000;
+            margin: 4px;
+            cursor: pointer;
+        }
+        .action-btn.btn-dark {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        .action-btn:disabled {
+            color: #888888;
+            border-color: #888888;
+            cursor: default;
+        }
+        /* Progress bar */
+        .prog-track {
+            border: 3px solid #000000;
+            height: 22px;
+            width: 90%;
+            margin: 14px auto 6px auto;
+            background-color: #ffffff;
+        }
+        .prog-fill {
+            background-color: #000000;
+            height: 22px;
+            width: 100%;
+        }
+        /* Preset buttons */
+        .preset-btn {
+            display: inline-block;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: bold;
+            border: 2px solid #000000;
+            background-color: #ffffff;
+            color: #000000;
+            margin: 3px;
+            cursor: pointer;
+        }
+        .preset-btn.active {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        /* Card sections */
+        .card {
+            border: 2px solid #000000;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+        .card h2, .card h3 {
+            margin: 0 0 8px 0;
+            font-size: 16px;
+            border-bottom: 1px solid #000000;
+            padding-bottom: 4px;
+        }
+        /* Alert Box */
+        .alert-box {
+            background-color: #000000;
+            color: #ffffff;
+            border: 4px solid #000000;
+            padding: 16px;
+            text-align: center;
+            margin: 15px 0;
+        }
+        .alert-box h2 {
+            margin: 0 0 6px 0;
+            font-size: 26px;
+            color: #ffffff;
+        }
+        /* Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #000000;
+            padding: 6px 8px;
+            text-align: left;
+        }
+        .data-table th {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        /* Footer */
+        .foot {
+            margin-top: 25px;
+            padding-top: 10px;
             border-top: 2px solid #000000;
             font-size: 12px;
-            display: flex;
-            justify-content: space-between;
         }
-        .footer a {
+        .foot a {
             color: #000000;
             font-weight: bold;
         }
@@ -100,47 +188,466 @@
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
+<div class="wrap">
+    <div class="top-banner">
         <h1>utilities</h1>
-        <p class="tagline">Kindle &amp; Low-Power Edition · Clean, High-Contrast, No Bloat</p>
+        <p>Kindle &amp; E-Ink Edition &middot; 100% Local &middot; No Flashing</p>
     </div>
 
-    <div class="nav-links">
-        <a class="nav-link active" href="kindle.html">Overview</a>
-        <a class="nav-link" href="stopwatch-kindle.html">Stopwatch</a>
-        <a class="nav-link" href="countdown-timer-kindle.html">Countdown Timer</a>
-        <a class="nav-link" href="index.html">Modern Version &rarr;</a>
+    <!-- Navigation Tabs -->
+    <div class="tab-bar">
+        <button id="tabBtnStopwatch" class="tab-btn active" type="button" onclick="switchTab('stopwatch')">[ Stopwatch ]</button>
+        <button id="tabBtnTimer" class="tab-btn" type="button" onclick="switchTab('timer')">[ Countdown Timer ]</button>
+        <a class="tab-btn" href="index.html" style="float: right;">Full Site &rarr;</a>
+        <div style="clear: both;"></div>
     </div>
 
-    <p>This lightweight edition is designed for <b>Amazon Kindle</b> experimental browsers, e-readers, and legacy devices. It uses zero external scripts or frameworks, features high-contrast black-and-white typography, and limits screen repaints to protect battery life.</p>
+    <!-- STOPWATCH PANEL -->
+    <div id="panelStopwatch">
+        <div class="time-box">
+            <div id="swDigits" class="big-time">00:00:00</div>
+            <div id="swStatus" class="status-badge">[ READY ]</div>
+        </div>
 
-    <div class="tool-card">
-        <h2>⏱ Stopwatch</h2>
-        <p>Simple, reliable stopwatch with split laps. Defaults to 1-second ticks to eliminate screen flickering on e-ink displays.</p>
-        <a class="btn-launch" href="stopwatch-kindle.html">Open Stopwatch &rarr;</a>
+        <div class="controls-row">
+            <button id="swBtnStart" class="action-btn btn-dark" type="button" onclick="swToggle()">Start</button>
+            <button id="swBtnLap" class="action-btn" type="button" onclick="swRecordLap()" disabled>Lap</button>
+            <button id="swBtnReset" class="action-btn" type="button" onclick="swReset()" disabled>Reset</button>
+        </div>
+
+        <!-- Laps Table -->
+        <div class="card">
+            <h3>RECORDED LAPS (<span id="swLapCount">0</span>)</h3>
+            <div id="swLapEmpty" style="padding: 10px; text-align: center; font-size: 14px;">
+                No laps recorded yet. Press <b>Lap</b> while stopwatch is running.
+            </div>
+            <table id="swLapTable" class="data-table" style="display: none;">
+                <thead>
+                    <tr>
+                        <th style="width: 45px;">#</th>
+                        <th>Lap Split</th>
+                        <th>Total Time</th>
+                    </tr>
+                </thead>
+                <tbody id="swLapBody"></tbody>
+            </table>
+            <div style="margin-top: 8px; text-align: right;">
+                <button id="swBtnClear" class="preset-btn" type="button" onclick="swClearLaps()" disabled>Clear Laps</button>
+            </div>
+        </div>
     </div>
 
-    <div class="tool-card">
-        <h2>⏳ Countdown Timer</h2>
-        <p>Productivity timer with quick presets (Pomodoro 25m, 5m break, etc.), custom minutes, high-contrast progress bar, and bold visual alarm.</p>
-        <a class="btn-launch" href="countdown-timer-kindle.html">Open Countdown Timer &rarr;</a>
+    <!-- COUNTDOWN TIMER PANEL -->
+    <div id="panelTimer" style="display: none;">
+        <div class="time-box">
+            <div id="tmDigits" class="big-time">25:00</div>
+            <div id="tmStatus" class="status-badge">[ READY ]</div>
+
+            <div class="prog-track">
+                <div id="tmProgBar" class="prog-fill"></div>
+            </div>
+            <div id="tmPercent" style="font-size: 13px; font-weight: bold; margin-top: 4px;">100% remaining</div>
+        </div>
+
+        <div class="controls-row">
+            <button id="tmBtnStart" class="action-btn btn-dark" type="button" onclick="tmToggle()">Start</button>
+            <button id="tmBtnReset" class="action-btn" type="button" onclick="tmReset()" disabled>Reset</button>
+            <button class="action-btn" type="button" onclick="tmAddMinutes(1)">+1m</button>
+            <button class="action-btn" type="button" onclick="tmAddMinutes(5)">+5m</button>
+        </div>
+
+        <!-- Alert Banner on Completion -->
+        <div id="tmAlertBox" class="alert-box" style="display: none;">
+            <h2>*** TIME'S UP! ***</h2>
+            <p style="margin: 6px 0 14px 0;">Your countdown has completed.</p>
+            <button class="action-btn" type="button" style="background-color:#ffffff; color:#000000;" onclick="tmDismissAlert()">[ Dismiss ]</button>
+        </div>
+
+        <!-- Presets -->
+        <div class="card">
+            <h3>PRESETS</h3>
+            <div>
+                <button class="preset-btn active" type="button" onclick="tmSetMinutes(25, this)">25m Pomodoro</button>
+                <button class="preset-btn" type="button" onclick="tmSetMinutes(5, this)">5m Break</button>
+                <button class="preset-btn" type="button" onclick="tmSetMinutes(15, this)">15m Long Break</button>
+                <button class="preset-btn" type="button" onclick="tmSetMinutes(1, this)">1m</button>
+                <button class="preset-btn" type="button" onclick="tmSetMinutes(3, this)">3m</button>
+                <button class="preset-btn" type="button" onclick="tmSetMinutes(10, this)">10m</button>
+                <button class="preset-btn" type="button" onclick="tmSetMinutes(30, this)">30m</button>
+                <button class="preset-btn" type="button" onclick="tmSetMinutes(45, this)">45m</button>
+                <button class="preset-btn" type="button" onclick="tmSetMinutes(60, this)">60m</button>
+            </div>
+        </div>
+
+        <!-- Custom Duration Form -->
+        <div class="card">
+            <h3>CUSTOM TIME</h3>
+            <div style="margin-top: 6px;">
+                <label style="font-weight: bold; margin-right: 10px;">
+                    Minutes:
+                    <input type="number" id="tmInputMin" value="25" min="0" max="999" style="width: 55px; font-size: 16px; padding: 3px; border: 2px solid #000000;">
+                </label>
+                <label style="font-weight: bold; margin-right: 10px;">
+                    Seconds:
+                    <input type="number" id="tmInputSec" value="0" min="0" max="59" style="width: 45px; font-size: 16px; padding: 3px; border: 2px solid #000000;">
+                </label>
+                <button class="preset-btn" type="button" onclick="tmApplyCustom()">Set</button>
+            </div>
+        </div>
     </div>
 
-    <div class="note-box">
-        <strong>E-Ink Optimization:</strong>
-        <ul style="margin: 6px 0 0 18px; padding: 0;">
-            <li>Zero CDNs or external downloads — completely local.</li>
-            <li>No rapid millisecond animations (prevents e-ink flashing).</li>
-            <li>Large, high-contrast touch targets for easy tapping.</li>
-        </ul>
-    </div>
-
-    <div class="footer">
-        <span>utilities · Kindle Edition</span>
-        <span><a href="index.html">Switch to Full Modern Site</a></span>
+    <div class="foot">
+        <div style="float: left;">utilities &middot; Kindle &amp; Low-Power Edition</div>
+        <div style="float: right;"><a href="index.html">Switch to Desktop Version</a></div>
+        <div style="clear: both;"></div>
     </div>
 </div>
+
+<script type="text/javascript">
+// Pure ES3 - 100% compatible with NetFront 3.4 and WebKit 528
+function pad2(n) {
+    return (n < 10 ? "0" : "") + n;
+}
+
+function getNow() {
+    return new Date().getTime();
+}
+
+function formatHMS(ms) {
+    if (ms < 0) ms = 0;
+    var totalSec = Math.floor(ms / 1000);
+    var s = totalSec % 60;
+    var totalMin = Math.floor(totalSec / 60);
+    var m = totalMin % 60;
+    var h = Math.floor(totalMin / 60);
+    return pad2(h) + ":" + pad2(m) + ":" + pad2(s);
+}
+
+function formatMS(ms) {
+    if (ms < 0) ms = 0;
+    var totalSec = Math.ceil(ms / 1000);
+    var s = totalSec % 60;
+    var totalMin = Math.floor(totalSec / 60);
+    var m = totalMin % 60;
+    var h = Math.floor(totalMin / 60);
+    if (h > 0) {
+        return pad2(h) + ":" + pad2(m) + ":" + pad2(s);
+    }
+    return pad2(m) + ":" + pad2(s);
+}
+
+// TAB SWITCHING
+function switchTab(name) {
+    var pSw = document.getElementById("panelStopwatch");
+    var pTm = document.getElementById("panelTimer");
+    var bSw = document.getElementById("tabBtnStopwatch");
+    var bTm = document.getElementById("tabBtnTimer");
+
+    if (name === "stopwatch") {
+        pSw.style.display = "block";
+        pTm.style.display = "none";
+        bSw.className = "tab-btn active";
+        bTm.className = "tab-btn";
+    } else {
+        pSw.style.display = "none";
+        pTm.style.display = "block";
+        bSw.className = "tab-btn";
+        bTm.className = "tab-btn active";
+    }
+}
+
+// --- STOPWATCH LOGIC ---
+var swRunning = false;
+var swStartTime = 0;
+var swElapsed = 0;
+var swLastLap = 0;
+var swTimer = null;
+var swLaps = [];
+
+function swUpdateDisplay() {
+    var cur = swElapsed;
+    if (swRunning) {
+        cur += (getNow() - swStartTime);
+    }
+    document.getElementById("swDigits").innerHTML = formatHMS(cur);
+}
+
+function swToggle() {
+    if (swRunning) {
+        // Pause
+        swRunning = false;
+        swElapsed += (getNow() - swStartTime);
+        if (swTimer) clearInterval(swTimer);
+        swTimer = null;
+
+        document.getElementById("swStatus").innerHTML = "[ PAUSED ]";
+        document.getElementById("swBtnStart").innerHTML = "Resume";
+        document.getElementById("swBtnStart").className = "action-btn btn-dark";
+        document.getElementById("swBtnLap").disabled = true;
+        swUpdateDisplay();
+    } else {
+        // Start
+        swRunning = true;
+        swStartTime = getNow();
+        document.getElementById("swStatus").innerHTML = "[ RUNNING ]";
+        document.getElementById("swBtnStart").innerHTML = "Pause";
+        document.getElementById("swBtnStart").className = "action-btn";
+        document.getElementById("swBtnLap").disabled = false;
+        document.getElementById("swBtnReset").disabled = false;
+
+        swTimer = setInterval(function() {
+            swUpdateDisplay();
+        }, 1000);
+        swUpdateDisplay();
+    }
+}
+
+function swReset() {
+    swRunning = false;
+    if (swTimer) clearInterval(swTimer);
+    swTimer = null;
+    swStartTime = 0;
+    swElapsed = 0;
+    swLastLap = 0;
+
+    document.getElementById("swStatus").innerHTML = "[ READY ]";
+    document.getElementById("swBtnStart").innerHTML = "Start";
+    document.getElementById("swBtnStart").className = "action-btn btn-dark";
+    document.getElementById("swBtnLap").disabled = true;
+    document.getElementById("swBtnReset").disabled = true;
+    swUpdateDisplay();
+    swClearLaps();
+}
+
+function swRecordLap() {
+    if (!swRunning) return;
+    var cur = swElapsed + (getNow() - swStartTime);
+    var lapSplit = cur - swLastLap;
+    swLastLap = cur;
+
+    swLaps.unshift({
+        num: swLaps.length + 1,
+        split: lapSplit,
+        total: cur
+    });
+
+    swRenderLaps();
+}
+
+function swRenderLaps() {
+    var countElem = document.getElementById("swLapCount");
+    var emptyElem = document.getElementById("swLapEmpty");
+    var tableElem = document.getElementById("swLapTable");
+    var bodyElem = document.getElementById("swLapBody");
+    var clearBtn = document.getElementById("swBtnClear");
+
+    countElem.innerHTML = swLaps.length;
+
+    if (swLaps.length === 0) {
+        emptyElem.style.display = "block";
+        tableElem.style.display = "none";
+        clearBtn.disabled = true;
+        bodyElem.innerHTML = "";
+        return;
+    }
+
+    emptyElem.style.display = "none";
+    tableElem.style.display = "table";
+    clearBtn.disabled = false;
+
+    var rows = "";
+    for (var i = 0; i < swLaps.length; i++) {
+        var item = swLaps[i];
+        rows += "<tr>";
+        rows += "<td>#" + item.num + "</td>";
+        rows += "<td><b>" + formatHMS(item.split) + "</b></td>";
+        rows += "<td>" + formatHMS(item.total) + "</td>";
+        rows += "</tr>";
+    }
+    bodyElem.innerHTML = rows;
+}
+
+function swClearLaps() {
+    swLaps = [];
+    swLastLap = swRunning ? (swElapsed + (getNow() - swStartTime)) : 0;
+    swRenderLaps();
+}
+
+// --- COUNTDOWN TIMER LOGIC ---
+var tmDurationMs = 25 * 60 * 1000;
+var tmRemainingMs = tmDurationMs;
+var tmRunning = false;
+var tmEndTime = 0;
+var tmTimer = null;
+
+function tmUpdateDisplay(ms) {
+    document.getElementById("tmDigits").innerHTML = formatMS(ms);
+    var ratio = tmDurationMs > 0 ? (ms / tmDurationMs) : 0;
+    if (ratio < 0) ratio = 0;
+    if (ratio > 1) ratio = 1;
+    var pct = Math.round(ratio * 100);
+
+    document.getElementById("tmProgBar").style.width = pct + "%";
+    document.getElementById("tmPercent").innerHTML = pct + "% remaining";
+}
+
+function tmToggle() {
+    if (tmRunning) {
+        // Pause
+        tmRunning = false;
+        if (tmTimer) clearInterval(tmTimer);
+        tmTimer = null;
+        tmRemainingMs = tmEndTime - getNow();
+        if (tmRemainingMs < 0) tmRemainingMs = 0;
+
+        document.getElementById("tmStatus").innerHTML = "[ PAUSED ]";
+        document.getElementById("tmBtnStart").innerHTML = "Resume";
+        document.getElementById("tmBtnStart").className = "action-btn btn-dark";
+        tmUpdateDisplay(tmRemainingMs);
+    } else {
+        // Start
+        if (tmRemainingMs <= 0) {
+            tmRemainingMs = tmDurationMs;
+        }
+        tmDismissAlert();
+        tmRunning = true;
+        tmEndTime = getNow() + tmRemainingMs;
+
+        document.getElementById("tmStatus").innerHTML = "[ RUNNING ]";
+        document.getElementById("tmBtnStart").innerHTML = "Pause";
+        document.getElementById("tmBtnStart").className = "action-btn";
+        document.getElementById("tmBtnReset").disabled = false;
+
+        tmTimer = setInterval(function() {
+            var now = getNow();
+            tmRemainingMs = tmEndTime - now;
+            if (tmRemainingMs <= 0) {
+                tmRemainingMs = 0;
+                tmComplete();
+            } else {
+                tmUpdateDisplay(tmRemainingMs);
+            }
+        }, 1000);
+        tmUpdateDisplay(tmRemainingMs);
+    }
+}
+
+function tmReset() {
+    tmRunning = false;
+    if (tmTimer) clearInterval(tmTimer);
+    tmTimer = null;
+    tmDismissAlert();
+
+    tmRemainingMs = tmDurationMs;
+    document.getElementById("tmStatus").innerHTML = "[ READY ]";
+    document.getElementById("tmBtnStart").innerHTML = "Start";
+    document.getElementById("tmBtnStart").className = "action-btn btn-dark";
+    document.getElementById("tmBtnReset").disabled = true;
+    tmUpdateDisplay(tmRemainingMs);
+}
+
+function tmComplete() {
+    tmRunning = false;
+    if (tmTimer) clearInterval(tmTimer);
+    tmTimer = null;
+
+    document.getElementById("tmStatus").innerHTML = "[ TIME'S UP ]";
+    document.getElementById("tmBtnStart").innerHTML = "Restart";
+    document.getElementById("tmBtnStart").className = "action-btn btn-dark";
+    tmUpdateDisplay(0);
+    document.getElementById("tmAlertBox").style.display = "block";
+}
+
+function tmDismissAlert() {
+    document.getElementById("tmAlertBox").style.display = "none";
+}
+
+function tmSetMinutes(min, btn) {
+    tmRunning = false;
+    if (tmTimer) clearInterval(tmTimer);
+    tmTimer = null;
+    tmDismissAlert();
+
+    tmDurationMs = min * 60 * 1000;
+    tmRemainingMs = tmDurationMs;
+
+    document.getElementById("tmInputMin").value = min;
+    document.getElementById("tmInputSec").value = 0;
+
+    var btns = document.getElementById("panelTimer").getElementsByTagName("button");
+    for (var i = 0; i < btns.length; i++) {
+        if (btns[i].className.indexOf("preset-btn") !== -1) {
+            btns[i].className = "preset-btn";
+        }
+    }
+    if (btn) btn.className = "preset-btn active";
+
+    document.getElementById("tmStatus").innerHTML = "[ READY ]";
+    document.getElementById("tmBtnStart").innerHTML = "Start";
+    document.getElementById("tmBtnStart").className = "action-btn btn-dark";
+    document.getElementById("tmBtnReset").disabled = true;
+    tmUpdateDisplay(tmRemainingMs);
+}
+
+function tmAddMinutes(min) {
+    var add = min * 60 * 1000;
+    tmDurationMs += add;
+    tmRemainingMs += add;
+    if (tmRunning) {
+        tmEndTime += add;
+    }
+    tmUpdateDisplay(tmRemainingMs);
+}
+
+function tmApplyCustom() {
+    var m = parseInt(document.getElementById("tmInputMin").value, 10) || 0;
+    var s = parseInt(document.getElementById("tmInputSec").value, 10) || 0;
+    var total = (m * 60 + s) * 1000;
+    if (total > 0) {
+        tmRunning = false;
+        if (tmTimer) clearInterval(tmTimer);
+        tmTimer = null;
+        tmDismissAlert();
+
+        tmDurationMs = total;
+        tmRemainingMs = total;
+
+        document.getElementById("tmStatus").innerHTML = "[ READY ]";
+        document.getElementById("tmBtnStart").innerHTML = "Start";
+        document.getElementById("tmBtnStart").className = "action-btn btn-dark";
+        document.getElementById("tmBtnReset").disabled = true;
+        tmUpdateDisplay(tmRemainingMs);
+    } else {
+        alert("Please enter a time greater than 0.");
+    }
+}
+
+// Keyboard shortcuts for hardware Kindle keyboard
+document.onkeydown = function(e) {
+    var k = e.keyCode || e.which;
+    if (k === 32) { // Space
+        var pSw = document.getElementById("panelStopwatch");
+        if (pSw.style.display !== "none") {
+            swToggle();
+        } else {
+            tmToggle();
+        }
+        if (e.preventDefault) e.preventDefault();
+        return false;
+    }
+    if (k === 82 || k === 114) { // R
+        var pSw = document.getElementById("panelStopwatch");
+        if (pSw.style.display !== "none") {
+            swReset();
+        } else {
+            tmReset();
+        }
+    }
+};
+
+swUpdateDisplay();
+tmUpdateDisplay(tmRemainingMs);
+</script>
 
 </body>
 </html>

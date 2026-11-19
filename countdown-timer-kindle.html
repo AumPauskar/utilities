@@ -1,165 +1,170 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countdown Timer — Kindle Edition</title>
-    <style>
-        /* High contrast e-ink friendly styling - pure black and white, zero external assets */
+    <title>Countdown Timer - Kindle Edition</title>
+    <style type="text/css">
+        /* CSS 2.1 ONLY - No flexbox, no grid, no CSS variables, no calc */
         body {
             background-color: #ffffff;
             color: #000000;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
             margin: 0;
-            padding: 14px;
+            padding: 10px;
+            font-size: 16px;
             line-height: 1.4;
         }
-        .container {
-            max-width: 650px;
+        .wrap {
+            max-width: 600px;
             margin: 0 auto;
         }
-        .header {
+        .top-banner {
             border-bottom: 3px solid #000000;
             padding-bottom: 8px;
             margin-bottom: 12px;
         }
-        .header h1 {
-            margin: 0 0 4px 0;
+        .top-banner h1 {
+            margin: 0;
             font-size: 26px;
             letter-spacing: -1px;
         }
-        .nav-links {
-            margin: 10px 0 16px 0;
-            padding: 8px 0;
-            border-bottom: 1px solid #000000;
-            border-top: 1px solid #000000;
-        }
-        .nav-link {
-            display: inline-block;
-            margin-right: 8px;
-            padding: 6px 12px;
-            border: 2px solid #000000;
-            background: #ffffff;
-            color: #000000;
-            text-decoration: none;
-            font-weight: bold;
+        .top-banner p {
+            margin: 4px 0 0 0;
             font-size: 13px;
         }
-        .nav-link.active {
-            background: #000000;
+        /* Navigation tabs */
+        .tab-bar {
+            border-bottom: 2px solid #000000;
+            margin-bottom: 16px;
+            padding-bottom: 6px;
+        }
+        .tab-btn {
+            display: inline-block;
+            padding: 8px 14px;
+            font-size: 15px;
+            font-weight: bold;
+            border: 2px solid #000000;
+            background-color: #ffffff;
+            color: #000000;
+            text-decoration: none;
+            margin-right: 6px;
+            margin-bottom: 4px;
+            cursor: pointer;
+        }
+        .tab-btn.active {
+            background-color: #000000;
             color: #ffffff;
         }
-        .display-box {
+        /* Clock / Digit Display Box */
+        .time-box {
             border: 4px solid #000000;
-            padding: 24px 10px 18px 10px;
+            padding: 20px 10px;
             text-align: center;
-            background: #ffffff;
-            margin-bottom: 16px;
+            background-color: #ffffff;
+            margin-bottom: 15px;
         }
-        .time-text {
+        .big-time {
             font-family: "Courier New", Courier, monospace;
-            font-size: 54px;
+            font-size: 52px;
             font-weight: bold;
             letter-spacing: 2px;
             margin: 0;
         }
-        .status-text {
+        .status-badge {
             font-size: 14px;
             font-weight: bold;
-            margin-top: 6px;
-            text-transform: uppercase;
             letter-spacing: 1px;
+            margin-top: 6px;
         }
-        /* High-contrast solid progress bar for E-Ink */
-        .progress-container {
+        /* Progress bar */
+        .prog-track {
             border: 3px solid #000000;
             height: 22px;
-            width: 85%;
-            margin: 16px auto 8px auto;
-            background: #ffffff;
-            box-sizing: border-box;
-            padding: 1px;
+            width: 90%;
+            margin: 14px auto 6px auto;
+            background-color: #ffffff;
         }
-        .progress-bar {
-            background: #000000;
-            height: 100%;
+        .prog-fill {
+            background-color: #000000;
+            height: 22px;
             width: 100%;
         }
-        .progress-label {
-            font-size: 13px;
-            font-weight: bold;
-            margin-top: 4px;
-        }
-        .btn-row {
-            margin: 16px 0;
+        /* Control Buttons */
+        .controls-row {
             text-align: center;
+            margin: 15px 0;
         }
-        .btn {
+        .action-btn {
             display: inline-block;
             padding: 12px 22px;
-            font-size: 17px;
+            font-size: 18px;
             font-weight: bold;
             border: 2px solid #000000;
-            background: #ffffff;
+            background-color: #ffffff;
             color: #000000;
-            cursor: pointer;
             margin: 4px;
-            text-decoration: none;
-            -webkit-appearance: none;
+            cursor: pointer;
         }
-        .btn-primary {
-            background: #000000;
+        .action-btn.btn-dark {
+            background-color: #000000;
             color: #ffffff;
         }
-        .btn-preset {
-            padding: 8px 14px;
-            font-size: 14px;
-            margin: 3px;
-        }
-        .btn-preset.active {
-            background: #000000;
-            color: #ffffff;
-        }
-        .btn-small {
-            padding: 6px 12px;
-            font-size: 13px;
-        }
-        .btn:disabled {
-            opacity: 0.35;
+        .action-btn:disabled {
+            color: #888888;
+            border-color: #888888;
             cursor: default;
         }
-        .section-box {
+        /* Preset buttons */
+        .preset-btn {
+            display: inline-block;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: bold;
             border: 2px solid #000000;
-            padding: 14px;
-            margin: 18px 0;
+            background-color: #ffffff;
+            color: #000000;
+            margin: 3px;
+            cursor: pointer;
         }
-        .section-box h3 {
-            margin: 0 0 10px 0;
-            font-size: 15px;
+        .preset-btn.active {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        /* Card sections */
+        .card {
+            border: 2px solid #000000;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+        .card h3 {
+            margin: 0 0 8px 0;
+            font-size: 16px;
             border-bottom: 1px solid #000000;
             padding-bottom: 4px;
         }
+        /* Alert Box */
         .alert-box {
-            background: #000000;
+            background-color: #000000;
             color: #ffffff;
             border: 4px solid #000000;
-            padding: 20px;
+            padding: 16px;
             text-align: center;
-            margin-top: 16px;
+            margin: 15px 0;
         }
         .alert-box h2 {
-            margin: 0 0 8px 0;
-            font-size: 28px;
+            margin: 0 0 6px 0;
+            font-size: 26px;
+            color: #ffffff;
         }
-        .footer {
-            margin-top: 30px;
-            padding-top: 12px;
+        /* Footer */
+        .foot {
+            margin-top: 25px;
+            padding-top: 10px;
             border-top: 2px solid #000000;
             font-size: 12px;
-            display: flex;
-            justify-content: space-between;
         }
-        .footer a {
+        .foot a {
             color: #000000;
             font-weight: bold;
         }
@@ -167,316 +172,268 @@
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
+<div class="wrap">
+    <div class="top-banner">
         <h1>Countdown Timer</h1>
-        <div style="font-size: 13px;">Kindle &amp; Low-Power Edition · 1s Screen Refresh</div>
+        <p>Kindle &amp; E-Ink Edition &middot; 1s Ticks &middot; No Flashing</p>
     </div>
 
-    <div class="nav-links">
-        <a class="nav-link" href="kindle.html">Kindle Home</a>
-        <a class="nav-link" href="stopwatch-kindle.html">Stopwatch</a>
-        <a class="nav-link active" href="countdown-timer-kindle.html">Countdown Timer</a>
-        <a class="nav-link" href="countdown-timer.html">Full Modern UI &rarr;</a>
+    <!-- Navigation -->
+    <div class="tab-bar">
+        <a class="tab-btn" href="kindle.html">Kindle Home</a>
+        <a class="tab-btn" href="stopwatch-kindle.html">Stopwatch</a>
+        <a class="tab-btn active" href="countdown-timer-kindle.html">Countdown Timer</a>
+        <a class="tab-btn" href="countdown-timer.html" style="float: right;">Full Site &rarr;</a>
+        <div style="clear: both;"></div>
     </div>
 
-    <!-- Main Display -->
-    <div class="display-box">
-        <div id="countdownDisplay" class="time-text">25:00</div>
-        <div id="statusLabel" class="status-text">[ READY ]</div>
+    <!-- TIMER DISPLAY -->
+    <div>
+        <div class="time-box">
+            <div id="tmDigits" class="big-time">25:00</div>
+            <div id="tmStatus" class="status-badge">[ READY ]</div>
 
-        <!-- High contrast progress bar -->
-        <div class="progress-container">
-            <div id="progressBar" class="progress-bar"></div>
+            <div class="prog-track">
+                <div id="tmProgBar" class="prog-fill"></div>
+            </div>
+            <div id="tmPercent" style="font-size: 13px; font-weight: bold; margin-top: 4px;">100% remaining</div>
         </div>
-        <div id="percentLabel" class="progress-label">100% remaining</div>
-    </div>
 
-    <!-- Actions -->
-    <div class="btn-row">
-        <button id="btnStartPause" class="btn btn-primary">Start</button>
-        <button id="btnReset" class="btn" disabled>Reset</button>
-        <button id="btnAdd1" class="btn btn-small">+1 min</button>
-        <button id="btnAdd5" class="btn btn-small">+5 min</button>
-    </div>
+        <div class="controls-row">
+            <button id="tmBtnStart" class="action-btn btn-dark" type="button" onclick="tmToggle()">Start</button>
+            <button id="tmBtnReset" class="action-btn" type="button" onclick="tmReset()" disabled>Reset</button>
+            <button class="action-btn" type="button" onclick="tmAddMinutes(1)">+1m</button>
+            <button class="action-btn" type="button" onclick="tmAddMinutes(5)">+5m</button>
+        </div>
 
-    <!-- Time's Up Alert Banner -->
-    <div id="alertBox" class="alert-box" style="display: none;">
-        <h2>*** TIME'S UP! ***</h2>
-        <p style="font-size: 16px; margin: 8px 0 16px 0;">Your countdown has completed.</p>
-        <button id="btnDismiss" class="btn" style="background: #ffffff; color: #000000; font-size: 16px; padding: 10px 24px;">Dismiss</button>
-    </div>
+        <!-- Alert Banner on Completion -->
+        <div id="tmAlertBox" class="alert-box" style="display: none;">
+            <h2>*** TIME'S UP! ***</h2>
+            <p style="margin: 6px 0 14px 0;">Your countdown has completed.</p>
+            <button class="action-btn" type="button" style="background-color:#ffffff; color:#000000;" onclick="tmDismissAlert()">[ Dismiss ]</button>
+        </div>
 
-    <!-- Quick Presets -->
-    <div class="section-box">
-        <h3>QUICK PRESETS</h3>
-        <div>
-            <button class="btn btn-preset active" data-min="25">🍅 25m Pomodoro</button>
-            <button class="btn btn-preset" data-min="5">☕ 5m Break</button>
-            <button class="btn btn-preset" data-min="15">🌿 15m Long Break</button>
-            <button class="btn btn-preset" data-min="1">1m</button>
-            <button class="btn btn-preset" data-min="3">3m</button>
-            <button class="btn btn-preset" data-min="10">10m</button>
-            <button class="btn btn-preset" data-min="30">30m</button>
-            <button class="btn btn-preset" data-min="45">45m</button>
-            <button class="btn btn-preset" data-min="60">60m</button>
+        <!-- Presets -->
+        <div class="card">
+            <h3>PRESETS</h3>
+            <div>
+                <button class="preset-btn active" type="button" onclick="tmSetMinutes(25, this)">25m Pomodoro</button>
+                <button class="preset-btn" type="button" onclick="tmSetMinutes(5, this)">5m Break</button>
+                <button class="preset-btn" type="button" onclick="tmSetMinutes(15, this)">15m Long Break</button>
+                <button class="preset-btn" type="button" onclick="tmSetMinutes(1, this)">1m</button>
+                <button class="preset-btn" type="button" onclick="tmSetMinutes(3, this)">3m</button>
+                <button class="preset-btn" type="button" onclick="tmSetMinutes(10, this)">10m</button>
+                <button class="preset-btn" type="button" onclick="tmSetMinutes(30, this)">30m</button>
+                <button class="preset-btn" type="button" onclick="tmSetMinutes(45, this)">45m</button>
+                <button class="preset-btn" type="button" onclick="tmSetMinutes(60, this)">60m</button>
+            </div>
+        </div>
+
+        <!-- Custom Duration Form -->
+        <div class="card">
+            <h3>CUSTOM TIME</h3>
+            <div style="margin-top: 6px;">
+                <label style="font-weight: bold; margin-right: 10px;">
+                    Minutes:
+                    <input type="number" id="tmInputMin" value="25" min="0" max="999" style="width: 55px; font-size: 16px; padding: 3px; border: 2px solid #000000;">
+                </label>
+                <label style="font-weight: bold; margin-right: 10px;">
+                    Seconds:
+                    <input type="number" id="tmInputSec" value="0" min="0" max="59" style="width: 45px; font-size: 16px; padding: 3px; border: 2px solid #000000;">
+                </label>
+                <button class="preset-btn" type="button" onclick="tmApplyCustom()">Set</button>
+            </div>
         </div>
     </div>
 
-    <!-- Custom Duration -->
-    <div class="section-box">
-        <h3>CUSTOM DURATION</h3>
-        <div style="margin: 8px 0;">
-            <label style="margin-right: 12px; font-weight: bold;">
-                Minutes:
-                <input type="number" id="inputMinutes" value="25" min="0" max="999" style="width: 60px; font-size: 16px; padding: 4px; border: 2px solid #000;">
-            </label>
-            <label style="margin-right: 12px; font-weight: bold;">
-                Seconds:
-                <input type="number" id="inputSeconds" value="0" min="0" max="59" style="width: 50px; font-size: 16px; padding: 4px; border: 2px solid #000;">
-            </label>
-            <button id="btnSetCustom" class="btn btn-small" style="font-weight: bold;">Set</button>
-        </div>
-    </div>
-
-    <div class="footer">
-        <span>utilities · Kindle Edition</span>
-        <span><a href="countdown-timer.html">Open Modern Version</a></span>
+    <div class="foot">
+        <div style="float: left;">utilities &middot; Kindle Edition</div>
+        <div style="float: right;"><a href="countdown-timer.html">Open Modern Version</a></div>
+        <div style="clear: both;"></div>
     </div>
 </div>
 
-<script>
-// Pure ES3/ES5 JavaScript for universal compatibility on older Kindles
-(function() {
-    var totalDurationMs = 25 * 60 * 1000;
-    var remainingMs = totalDurationMs;
-    var isRunning = false;
-    var endTime = 0;
-    var timerInterval = null;
+<script type="text/javascript">
+function pad2(n) {
+    return (n < 10 ? "0" : "") + n;
+}
 
-    var countdownDisplay = document.getElementById("countdownDisplay");
-    var statusLabel = document.getElementById("statusLabel");
-    var progressBar = document.getElementById("progressBar");
-    var percentLabel = document.getElementById("percentLabel");
-    var btnStartPause = document.getElementById("btnStartPause");
-    var btnReset = document.getElementById("btnReset");
-    var btnAdd1 = document.getElementById("btnAdd1");
-    var btnAdd5 = document.getElementById("btnAdd5");
-    var alertBox = document.getElementById("alertBox");
-    var btnDismiss = document.getElementById("btnDismiss");
-    var inputMinutes = document.getElementById("inputMinutes");
-    var inputSeconds = document.getElementById("inputSeconds");
-    var btnSetCustom = document.getElementById("btnSetCustom");
-    var presetButtons = document.querySelectorAll ? document.querySelectorAll(".btn-preset") : [];
+function getNow() {
+    return new Date().getTime();
+}
 
-    function pad(num) {
-        return (num < 10 ? "0" : "") + num;
+function formatMS(ms) {
+    if (ms < 0) ms = 0;
+    var totalSec = Math.ceil(ms / 1000);
+    var s = totalSec % 60;
+    var totalMin = Math.floor(totalSec / 60);
+    var m = totalMin % 60;
+    var h = Math.floor(totalMin / 60);
+    if (h > 0) {
+        return pad2(h) + ":" + pad2(m) + ":" + pad2(s);
     }
+    return pad2(m) + ":" + pad2(s);
+}
 
-    function formatTime(ms) {
-        if (ms < 0) ms = 0;
-        var totalSec = Math.ceil(ms / 1000);
-        var s = totalSec % 60;
-        var totalMin = Math.floor(totalSec / 60);
-        var m = totalMin % 60;
-        var h = Math.floor(totalMin / 60);
+var tmDurationMs = 25 * 60 * 1000;
+var tmRemainingMs = tmDurationMs;
+var tmRunning = false;
+var tmEndTime = 0;
+var tmTimer = null;
 
-        if (h > 0) {
-            return pad(h) + ":" + pad(m) + ":" + pad(s);
+function tmUpdateDisplay(ms) {
+    document.getElementById("tmDigits").innerHTML = formatMS(ms);
+    var ratio = tmDurationMs > 0 ? (ms / tmDurationMs) : 0;
+    if (ratio < 0) ratio = 0;
+    if (ratio > 1) ratio = 1;
+    var pct = Math.round(ratio * 100);
+
+    document.getElementById("tmProgBar").style.width = pct + "%";
+    document.getElementById("tmPercent").innerHTML = pct + "% remaining";
+}
+
+function tmToggle() {
+    if (tmRunning) {
+        tmRunning = false;
+        if (tmTimer) clearInterval(tmTimer);
+        tmTimer = null;
+        tmRemainingMs = tmEndTime - getNow();
+        if (tmRemainingMs < 0) tmRemainingMs = 0;
+
+        document.getElementById("tmStatus").innerHTML = "[ PAUSED ]";
+        document.getElementById("tmBtnStart").innerHTML = "Resume";
+        document.getElementById("tmBtnStart").className = "action-btn btn-dark";
+        tmUpdateDisplay(tmRemainingMs);
+    } else {
+        if (tmRemainingMs <= 0) {
+            tmRemainingMs = tmDurationMs;
         }
-        return pad(m) + ":" + pad(s);
-    }
+        tmDismissAlert();
+        tmRunning = true;
+        tmEndTime = getNow() + tmRemainingMs;
 
-    function getNowMs() {
-        return new Date().getTime();
-    }
+        document.getElementById("tmStatus").innerHTML = "[ RUNNING ]";
+        document.getElementById("tmBtnStart").innerHTML = "Pause";
+        document.getElementById("tmBtnStart").className = "action-btn";
+        document.getElementById("tmBtnReset").disabled = false;
 
-    function updateDisplay(ms) {
-        countdownDisplay.innerHTML = formatTime(ms);
-
-        var ratio = totalDurationMs > 0 ? (ms / totalDurationMs) : 0;
-        if (ratio < 0) ratio = 0;
-        if (ratio > 1) ratio = 1;
-
-        var pct = Math.round(ratio * 100);
-        progressBar.style.width = pct + "%";
-        percentLabel.innerHTML = pct + "% remaining";
-    }
-
-    function startTimer() {
-        if (remainingMs <= 0) {
-            remainingMs = totalDurationMs;
-        }
-        dismissAlert();
-        isRunning = true;
-        endTime = getNowMs() + remainingMs;
-
-        statusLabel.innerHTML = "[ RUNNING ]";
-        btnStartPause.innerHTML = "Pause";
-        btnStartPause.className = "btn";
-        btnReset.disabled = false;
-
-        timerInterval = setInterval(function() {
-            var now = getNowMs();
-            remainingMs = endTime - now;
-            if (remainingMs <= 0) {
-                remainingMs = 0;
-                triggerComplete();
+        tmTimer = setInterval(function() {
+            var now = getNow();
+            tmRemainingMs = tmEndTime - now;
+            if (tmRemainingMs <= 0) {
+                tmRemainingMs = 0;
+                tmComplete();
             } else {
-                updateDisplay(remainingMs);
+                tmUpdateDisplay(tmRemainingMs);
             }
         }, 1000);
+        tmUpdateDisplay(tmRemainingMs);
     }
+}
 
-    function pauseTimer() {
-        if (!isRunning) return;
-        isRunning = false;
-        clearInterval(timerInterval);
-        timerInterval = null;
-        remainingMs = endTime - getNowMs();
-        if (remainingMs < 0) remainingMs = 0;
+function tmReset() {
+    tmRunning = false;
+    if (tmTimer) clearInterval(tmTimer);
+    tmTimer = null;
+    tmDismissAlert();
 
-        statusLabel.innerHTML = "[ PAUSED ]";
-        btnStartPause.innerHTML = "Resume";
-        btnStartPause.className = "btn btn-primary";
-        updateDisplay(remainingMs);
+    tmRemainingMs = tmDurationMs;
+    document.getElementById("tmStatus").innerHTML = "[ READY ]";
+    document.getElementById("tmBtnStart").innerHTML = "Start";
+    document.getElementById("tmBtnStart").className = "action-btn btn-dark";
+    document.getElementById("tmBtnReset").disabled = true;
+    tmUpdateDisplay(tmRemainingMs);
+}
+
+function tmComplete() {
+    tmRunning = false;
+    if (tmTimer) clearInterval(tmTimer);
+    tmTimer = null;
+
+    document.getElementById("tmStatus").innerHTML = "[ TIME'S UP ]";
+    document.getElementById("tmBtnStart").innerHTML = "Restart";
+    document.getElementById("tmBtnStart").className = "action-btn btn-dark";
+    tmUpdateDisplay(0);
+    document.getElementById("tmAlertBox").style.display = "block";
+}
+
+function tmDismissAlert() {
+    document.getElementById("tmAlertBox").style.display = "none";
+}
+
+function tmSetMinutes(min, btn) {
+    tmRunning = false;
+    if (tmTimer) clearInterval(tmTimer);
+    tmTimer = null;
+    tmDismissAlert();
+
+    tmDurationMs = min * 60 * 1000;
+    tmRemainingMs = tmDurationMs;
+
+    document.getElementById("tmInputMin").value = min;
+    document.getElementById("tmInputSec").value = 0;
+
+    var btns = document.getElementsByTagName("button");
+    for (var i = 0; i < btns.length; i++) {
+        if (btns[i].className.indexOf("preset-btn") !== -1) {
+            btns[i].className = "preset-btn";
+        }
     }
+    if (btn) btn.className = "preset-btn active";
 
-    function resetTimer() {
-        isRunning = false;
-        if (timerInterval) {
-            clearInterval(timerInterval);
-            timerInterval = null;
-        }
-        dismissAlert();
-        remainingMs = totalDurationMs;
-        statusLabel.innerHTML = "[ READY ]";
-        btnStartPause.innerHTML = "Start";
-        btnStartPause.className = "btn btn-primary";
-        btnReset.disabled = true;
-        updateDisplay(remainingMs);
+    document.getElementById("tmStatus").innerHTML = "[ READY ]";
+    document.getElementById("tmBtnStart").innerHTML = "Start";
+    document.getElementById("tmBtnStart").className = "action-btn btn-dark";
+    document.getElementById("tmBtnReset").disabled = true;
+    tmUpdateDisplay(tmRemainingMs);
+}
+
+function tmAddMinutes(min) {
+    var add = min * 60 * 1000;
+    tmDurationMs += add;
+    tmRemainingMs += add;
+    if (tmRunning) {
+        tmEndTime += add;
     }
+    tmUpdateDisplay(tmRemainingMs);
+}
 
-    function triggerComplete() {
-        isRunning = false;
-        clearInterval(timerInterval);
-        timerInterval = null;
+function tmApplyCustom() {
+    var m = parseInt(document.getElementById("tmInputMin").value, 10) || 0;
+    var s = parseInt(document.getElementById("tmInputSec").value, 10) || 0;
+    var total = (m * 60 + s) * 1000;
+    if (total > 0) {
+        tmRunning = false;
+        if (tmTimer) clearInterval(tmTimer);
+        tmTimer = null;
+        tmDismissAlert();
 
-        statusLabel.innerHTML = "[ TIME'S UP ]";
-        btnStartPause.innerHTML = "Restart";
-        btnStartPause.className = "btn btn-primary";
-        updateDisplay(0);
-        alertBox.style.display = "block";
+        tmDurationMs = total;
+        tmRemainingMs = total;
+
+        document.getElementById("tmStatus").innerHTML = "[ READY ]";
+        document.getElementById("tmBtnStart").innerHTML = "Start";
+        document.getElementById("tmBtnStart").className = "action-btn btn-dark";
+        document.getElementById("tmBtnReset").disabled = true;
+        tmUpdateDisplay(tmRemainingMs);
+    } else {
+        alert("Please enter a time greater than 0.");
     }
+}
 
-    function dismissAlert() {
-        alertBox.style.display = "none";
+document.onkeydown = function(e) {
+    var k = e.keyCode || e.which;
+    if (k === 32) { // Space
+        tmToggle();
+        if (e.preventDefault) e.preventDefault();
+        return false;
     }
-
-    function setDuration(ms, activeBtn) {
-        isRunning = false;
-        if (timerInterval) {
-            clearInterval(timerInterval);
-            timerInterval = null;
-        }
-        dismissAlert();
-        totalDurationMs = ms;
-        remainingMs = ms;
-
-        var totalSec = Math.floor(ms / 1000);
-        var s = totalSec % 60;
-        var m = Math.floor(totalSec / 60);
-        inputMinutes.value = m;
-        inputSeconds.value = s;
-
-        for (var i = 0; i < presetButtons.length; i++) {
-            presetButtons[i].className = "btn btn-preset";
-        }
-        if (activeBtn) {
-            activeBtn.className = "btn btn-preset active";
-        }
-
-        statusLabel.innerHTML = "[ READY ]";
-        btnStartPause.innerHTML = "Start";
-        btnStartPause.className = "btn btn-primary";
-        btnReset.disabled = true;
-        updateDisplay(remainingMs);
+    if (k === 82 || k === 114) { // R
+        tmReset();
     }
+};
 
-    function addMinutes(min) {
-        var addMs = min * 60 * 1000;
-        totalDurationMs += addMs;
-        remainingMs += addMs;
-        if (isRunning) {
-            endTime += addMs;
-        }
-        updateDisplay(remainingMs);
-    }
-
-    // Controls
-    btnStartPause.onclick = function() {
-        if (isRunning) {
-            pauseTimer();
-        } else {
-            startTimer();
-        }
-    };
-
-    btnReset.onclick = function() {
-        resetTimer();
-    };
-
-    btnAdd1.onclick = function() {
-        addMinutes(1);
-    };
-
-    btnAdd5.onclick = function() {
-        addMinutes(5);
-    };
-
-    btnDismiss.onclick = function() {
-        dismissAlert();
-    };
-
-    // Presets
-    for (var i = 0; i < presetButtons.length; i++) {
-        (function(btn) {
-            btn.onclick = function() {
-                var m = parseInt(btn.getAttribute("data-min"), 10);
-                if (m > 0) {
-                    setDuration(m * 60 * 1000, btn);
-                }
-            };
-        })(presetButtons[i]);
-    }
-
-    // Custom duration
-    btnSetCustom.onclick = function() {
-        var m = parseInt(inputMinutes.value, 10) || 0;
-        var s = parseInt(inputSeconds.value, 10) || 0;
-        var total = (m * 60 + s) * 1000;
-        if (total > 0) {
-            setDuration(total, null);
-        } else {
-            alert("Please enter a duration greater than zero.");
-        }
-    };
-
-    // Keyboard support
-    document.onkeydown = function(e) {
-        var key = e.keyCode || e.which;
-        if (key === 32) { // Space
-            if (isRunning) pauseTimer(); else startTimer();
-            if (e.preventDefault) e.preventDefault();
-            return false;
-        }
-        if (key === 82 || key === 114) { // R
-            resetTimer();
-        }
-    };
-
-    updateDisplay(remainingMs);
-})();
+tmUpdateDisplay(tmRemainingMs);
 </script>
 
 </body>
