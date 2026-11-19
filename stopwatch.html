@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#10131a">
+    <title>Stopwatch — utilities</title>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- React powers the shared application shell -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <div id="reactSidebar"></div>
+
+    <div class="main-content">
+
+        <header class="topbar">
+            <a class="brand" href="index.html">
+                <span class="brand-mark">U</span>
+                <span>utilities</span>
+            </a>
+
+            <span class="local-pill">
+                <i></i> Runs locally in your browser
+            </span>
+        </header>
+
+        <main class="shell">
+
+            <section id="stopwatchPage" class="tool-page active">
+                <div class="tool-page-heading">
+                    <div>
+                        <p class="eyebrow">TIME TOOL 01</p>
+                        <h1>Stopwatch <span>precision.</span></h1>
+                        <p class="subhead">High-resolution browser stopwatch with split lap times, statistics, keyboard shortcuts, and CSV export.</p>
+                    </div>
+                    <button id="btnFullscreen" class="secondary-btn" aria-label="Toggle Fullscreen">Fullscreen ⛶</button>
+                </div>
+
+                <div class="workspace">
+
+                    <!-- MAIN TIMER STAGE -->
+                    <div id="stopwatchFullscreenContainer" class="stage-column time-fullscreen-container">
+                        <button id="btnExitFullscreen" class="secondary-btn fullscreen-exit-btn">Exit Fullscreen ✕</button>
+
+                        <div class="stage-head">
+                            <div>
+                                <span class="step">01</span>
+                                <strong>Stopwatch</strong>
+                            </div>
+                            <span id="statusPill" class="time-status-pill">
+                                <i></i> <span id="statusText">Ready</span>
+                            </span>
+                        </div>
+
+                        <div class="time-stage-box">
+                            <div class="timer-digits-container" aria-live="polite">
+                                <span id="digitsMain" class="timer-digits-large">00:00:00</span><span id="digitsFraction" class="timer-digits-large timer-digits-fraction">.00</span>
+                            </div>
+
+                            <div class="timer-labels-row" aria-hidden="true">
+                                <span>HR</span>
+                                <span>MIN</span>
+                                <span>SEC</span>
+                                <span>MS</span>
+                            </div>
+
+                            <div id="subReadout" class="time-sub-readout">Ready to start</div>
+
+                            <div class="time-btn-row">
+                                <button id="btnStartPause" class="timer-btn timer-btn-primary">
+                                    <span>▶</span> Start
+                                </button>
+                                <button id="btnLap" class="timer-btn timer-btn-secondary" disabled>
+                                    <span>🚩</span> Lap
+                                </button>
+                                <button id="btnReset" class="timer-btn timer-btn-secondary" disabled>
+                                    <span>↺</span> Reset
+                                </button>
+                            </div>
+
+                            <div class="time-shortcut-hint" aria-hidden="true">
+                                <span><kbd>Space</kbd> Start/Pause</span>
+                                <span><kbd>L</kbd> Lap</span>
+                                <span><kbd>R</kbd> Reset</span>
+                                <span><kbd>F</kbd> Fullscreen</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LAPS & STATS -->
+                    <div class="tools-column">
+                        <div class="stage-head">
+                            <div>
+                                <span class="step">02</span>
+                                <strong>Split Analysis</strong>
+                            </div>
+                            <span id="lapCountBadge" class="muted">0 laps</span>
+                        </div>
+
+                        <div class="lap-panel-inner" style="padding: 20px;">
+                            <!-- Performance summary -->
+                            <div class="lap-stats-grid">
+                                <div class="lap-stat-card fastest">
+                                    <div class="lap-stat-label">Fastest</div>
+                                    <div id="statFastest" class="lap-stat-val">--:--.--</div>
+                                </div>
+                                <div class="lap-stat-card slowest">
+                                    <div class="lap-stat-label">Slowest</div>
+                                    <div id="statSlowest" class="lap-stat-val">--:--.--</div>
+                                </div>
+                                <div class="lap-stat-card">
+                                    <div class="lap-stat-label">Average</div>
+                                    <div id="statAverage" class="lap-stat-val">--:--.--</div>
+                                </div>
+                            </div>
+
+                            <!-- Laps list -->
+                            <div class="lap-table-wrap">
+                                <table class="lap-table" aria-label="Recorded Laps">
+                                    <thead>
+                                        <tr>
+                                            <th>Lap</th>
+                                            <th>Split Time</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="lapTableBody">
+                                        <!-- Rows dynamically injected -->
+                                    </tbody>
+                                </table>
+                                <div id="lapEmptyState" class="lap-empty-state">
+                                    <span>⏱</span>
+                                    <p>No laps recorded yet.</p>
+                                    <small style="color:#526173">Press Lap or press <b>L</b> while running.</small>
+                                </div>
+                            </div>
+
+                            <div class="lap-actions-bar">
+                                <button id="btnCopyLaps" class="lap-action-link" disabled>📋 Copy Laps</button>
+                                <button id="btnExportCsv" class="lap-action-link" disabled>📥 Export CSV</button>
+                                <button id="btnClearLaps" class="lap-action-link" disabled>🗑 Clear</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <footer>
+                <span>utilities</span>
+                <span>Local processing · No account · No uploads</span>
+            </footer>
+        </main>
+    </div>
+</div>
+
+<script src="app.js"></script>
+<script src="stopwatch.js"></script>
+
+</body>
+</html>

@@ -9,7 +9,9 @@
         { id: "markdown-to-pdf", icon: "M", label: "Markdown to PDF", detail: "Write & export", description: "Write with Markdown, preview it live, and save a clean PDF.", accent: "blue" },
         { id: "latex-to-pdf", icon: "∑", label: "LaTeX to PDF", detail: "Typeset & export", description: "Compile equations and structured documents directly in your browser.", accent: "gold" },
         { id: "pdf-compress", icon: "⬇", label: "PDF Compress", detail: "Shrink & export", description: "Reduce PDF file size locally by re-encoding images at a compression level you choose.", accent: "rose" },
-        { id: "img-compress", icon: "🖼", label: "Image Compress", detail: "Resize & encode", description: "Compress JPG, PNG, WebP and more in bulk — with quality, resize, and format controls.", accent: "teal" }
+        { id: "img-compress", icon: "🖼", label: "Image Compress", detail: "Resize & encode", description: "Compress JPG, PNG, WebP and more in bulk — with quality, resize, and format controls.", accent: "teal" },
+        { id: "stopwatch", icon: "⏱", label: "Stopwatch", detail: "Laps & precision", description: "High-precision stopwatch with lap recording, split stats, and CSV export.", accent: "cyan" },
+        { id: "countdown-timer", icon: "⏳", label: "Countdown Timer", detail: "Presets & alerts", description: "Customizable countdown timer with progress ring, presets, and audio chime.", accent: "amber" }
     ];
     window.utilitiesCatalog = utilitiesCatalog;
 
@@ -86,7 +88,11 @@
                     ? h("div", { className: "carousel-document-preview latex-mini" }, h("b", null, "∫ f(x) dx"), h("span", null, "\\section{Results}"), h("i", null, "Compiled locally"))
                     : tool.id === "pdf-compress"
                         ? h("div", { className: "carousel-document-preview compress-mini" }, h("b", null, "⬇"), h("span", null, "Drop PDF → compress"), h("i", null, "Smaller. Local."))
-                        : h("div", { className: "carousel-document-preview img-compress-mini" }, h("b", null, "🖼"), h("span", null, "JPG · PNG · WebP · GIF"), h("i", null, "Bulk compress"));
+                        : tool.id === "img-compress"
+                            ? h("div", { className: "carousel-document-preview img-compress-mini" }, h("b", null, "🖼"), h("span", null, "JPG · PNG · WebP · GIF"), h("i", null, "Bulk compress"))
+                            : tool.id === "stopwatch"
+                                ? h("div", { className: "carousel-document-preview stopwatch-mini" }, h("b", null, "00:42.85"), h("span", null, "Lap 3 · 00:12.40 (Fastest)"), h("i", null, "⏱ High precision"))
+                                : h("div", { className: "carousel-document-preview countdown-mini" }, h("b", null, "24:59"), h("span", null, "Pomodoro · Focus session"), h("i", null, "⏳ Audio alert"));
 
         return h("div", { className: `carousel-preview ${tool.accent}` },
             h("div", { className: "preview-window-bar" }, h("i"), h("i"), h("i"), h("span", null, tool.label)),

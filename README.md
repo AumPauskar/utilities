@@ -1,28 +1,24 @@
-
 # utilities
 
-A local-first collection of browser utilities. The first tool is Video to GIF,
-with video preview, trimming, cropping, and GIF export. It also includes
-Markdown to PDF and LaTeX to PDF document tools.
+A local-first collection of browser utilities. Tools include Video to GIF,
+Markdown to PDF, LaTeX to PDF, PDF Compress, Image Compress, Stopwatch,
+and Countdown Timer.
 
-The four pages are separate HTML files: `index.html` for the overview,
-`video-to-gif.html`, `markdown-to-pdf.html`, and `latex-to-pdf.html`. The
-overview carousel and shared sidebar are driven by the `utilitiesCatalog`
+Each tool runs in a separate HTML file (`video-to-gif.html`, `markdown-to-pdf.html`,
+`latex-to-pdf.html`, `pdf-compress.html`, `img-compress.html`, `stopwatch.html`,
+and `countdown-timer.html`), unified by `index.html` for the overview.
+The shared sidebar and landing carousel are driven by the `utilitiesCatalog`
 registry in `app.js`.
 
 ## Features
 
-- Load local video files.
-- Preview and scrub videos.
-- Trim video segments.
-- Crop video dimensions.
-- Aspect ratio presets: 1:1, 4:5, 16:9 and 9:16.
-- Convert video segments into GIF.
-- Configure GIF FPS and resolution.
-- Download processed files.
+- Load local video files, scrub, trim, crop, and convert to GIF.
 - Live Markdown preview with browser PDF export.
-- LaTeX.js-powered document parsing with math, sections, lists, links, symbols,
-  and multi-column preview plus browser PDF export.
+- LaTeX.js-powered document parsing with equations, sections, and PDF export.
+- PDF compression with in-browser image downsampling.
+- Bulk image compression and format conversion (JPEG, PNG, WebP).
+- High-precision Stopwatch with split lap times, statistics (fastest, slowest, average), keyboard shortcuts, and CSV/clipboard export.
+- Countdown Timer with productivity presets (Pomodoro, Short/Long Break, Deep Work), custom duration pickers, circular progress ring, audio chime/bell alerts via Web Audio API, and fullscreen mode.
 
 ## Running locally
 
@@ -43,13 +39,9 @@ http://localhost:8000
 This project is compatible with GitHub Pages.
 
 No backend or build process is required. The shared navigation shell uses React
-18 from its browser CDN while the editor continues to use native browser APIs.
+18 from its browser CDN while each tool runs locally in the client using browser APIs.
 
 ## Privacy
 
-Video files are processed locally in the browser.
-No video upload endpoint exists.
-
-The LaTeX utility compiles through LaTeX.js in the browser. It supports a broad
-LaTeX subset, but packages or engine-specific features that LaTeX.js does not
-implement will need a full TeX engine such as pdfLaTeX, XeLaTeX, or LuaLaTeX.
+All processing happens locally on your device in the browser.
+No files or data are ever uploaded.
