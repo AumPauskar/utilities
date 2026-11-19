@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#10131a">
     <title>utilities — Local browser tools</title>
+
+    <!-- Kindle / Legacy browser detection (runs before external scripts) -->
+    <script>
+    if (navigator.userAgent && /Kindle|Silk\/|Kobo|EBRD/i.test(navigator.userAgent)) {
+        window.location.replace("kindle.html");
+    }
+    </script>
 
     <link rel="stylesheet" href="styles.css">
 
@@ -21,6 +27,12 @@
 </head>
 
 <body>
+
+<noscript>
+    <div style="background:#1b2330; border-bottom:1px solid #364457; color:#f1f4fa; padding:12px; text-align:center; font-size:13px;">
+        Using an older browser or Kindle? <a href="kindle.html" style="color:var(--accent,#a5f06b); font-weight:bold; text-decoration:underline; margin-left:6px;">Switch to the Kindle &amp; Low-Power Edition &rarr;</a>
+    </div>
+</noscript>
 
 <div class="app-layout">
 
@@ -44,7 +56,7 @@
     <div id="reactLanding" class="react-landing"></div>
 
     <footer>
-        <span>utilities</span>
+        <span>utilities · <a href="kindle.html" style="color:#738093; text-decoration:underline;">Kindle edition</a></span>
         <span>Local processing · No account · No uploads</span>
     </footer>
         </main>

@@ -74,7 +74,8 @@
             ),
             h("div", { className: "sidebar-foot" },
                 h("span", { className: "privacy-dot" }),
-                h("span", null, "Private by default")
+                h("span", null, "Private by default"),
+                h("a", { href: "kindle.html", style: { color: "#607085", fontSize: "10px", textDecoration: "none", marginTop: "3px", display: "block" } }, "📱 Kindle edition")
             )
         );
     }

@@ -6,6 +6,13 @@
     <meta name="theme-color" content="#10131a">
     <title>Stopwatch — utilities</title>
 
+    <!-- Kindle / Legacy browser detection (runs before external scripts) -->
+    <script>
+    if (navigator.userAgent && /Kindle|Silk\/|Kobo|EBRD/i.test(navigator.userAgent)) {
+        window.location.replace("stopwatch-kindle.html");
+    }
+    </script>
+
     <link rel="stylesheet" href="styles.css">
 
     <!-- React powers the shared application shell -->
@@ -14,6 +21,12 @@
 </head>
 
 <body>
+
+<noscript>
+    <div style="background:#1b2330; border-bottom:1px solid #364457; color:#f1f4fa; padding:12px; text-align:center; font-size:13px;">
+        Using an older browser or Kindle? <a href="stopwatch-kindle.html" style="color:var(--accent,#a5f06b); font-weight:bold; text-decoration:underline; margin-left:6px;">Switch to the Kindle &amp; Low-Power Edition &rarr;</a>
+    </div>
+</noscript>
 
 <div class="app-layout">
 
@@ -41,7 +54,10 @@
                         <h1>Stopwatch <span>precision.</span></h1>
                         <p class="subhead">High-resolution browser stopwatch with split lap times, statistics, keyboard shortcuts, and CSV export.</p>
                     </div>
-                    <button id="btnFullscreen" class="secondary-btn" aria-label="Toggle Fullscreen">Fullscreen ⛶</button>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <a href="stopwatch-kindle.html" class="secondary-btn" title="High-contrast version optimized for e-ink and legacy devices" style="text-decoration:none;">📱 Kindle / Lite</a>
+                        <button id="btnFullscreen" class="secondary-btn" aria-label="Toggle Fullscreen">Fullscreen ⛶</button>
+                    </div>
                 </div>
 
                 <div class="workspace">
@@ -155,7 +171,7 @@
             </section>
 
             <footer>
-                <span>utilities</span>
+                <span>utilities · <a href="stopwatch-kindle.html" style="color:#738093; text-decoration:underline;">Kindle edition</a></span>
                 <span>Local processing · No account · No uploads</span>
             </footer>
         </main>

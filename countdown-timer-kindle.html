@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer — Kindle Edition</title>
+    <style>
+        /* High contrast e-ink friendly styling - pure black and white, zero external assets */
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 14px;
+            line-height: 1.4;
+        }
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+        }
+        .header {
+            border-bottom: 3px solid #000000;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+        .header h1 {
+            margin: 0 0 4px 0;
+            font-size: 26px;
+            letter-spacing: -1px;
+        }
+        .nav-links {
+            margin: 10px 0 16px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #000000;
+            border-top: 1px solid #000000;
+        }
+        .nav-link {
+            display: inline-block;
+            margin-right: 8px;
+            padding: 6px 12px;
+            border: 2px solid #000000;
+            background: #ffffff;
+            color: #000000;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .nav-link.active {
+            background: #000000;
+            color: #ffffff;
+        }
+        .display-box {
+            border: 4px solid #000000;
+            padding: 24px 10px 18px 10px;
+            text-align: center;
+            background: #ffffff;
+            margin-bottom: 16px;
+        }
+        .time-text {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 54px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+        .status-text {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        /* High-contrast solid progress bar for E-Ink */
+        .progress-container {
+            border: 3px solid #000000;
+            height: 22px;
+            width: 85%;
+            margin: 16px auto 8px auto;
+            background: #ffffff;
+            box-sizing: border-box;
+            padding: 1px;
+        }
+        .progress-bar {
+            background: #000000;
+            height: 100%;
+            width: 100%;
+        }
+        .progress-label {
+            font-size: 13px;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+        .btn-row {
+            margin: 16px 0;
+            text-align: center;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 22px;
+            font-size: 17px;
+            font-weight: bold;
+            border: 2px solid #000000;
+            background: #ffffff;
+            color: #000000;
+            cursor: pointer;
+            margin: 4px;
+            text-decoration: none;
+            -webkit-appearance: none;
+        }
+        .btn-primary {
+            background: #000000;
+            color: #ffffff;
+        }
+        .btn-preset {
+            padding: 8px 14px;
+            font-size: 14px;
+            margin: 3px;
+        }
+        .btn-preset.active {
+            background: #000000;
+            color: #ffffff;
+        }
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+        .btn:disabled {
+            opacity: 0.35;
+            cursor: default;
+        }
+        .section-box {
+            border: 2px solid #000000;
+            padding: 14px;
+            margin: 18px 0;
+        }
+        .section-box h3 {
+            margin: 0 0 10px 0;
+            font-size: 15px;
+            border-bottom: 1px solid #000000;
+            padding-bottom: 4px;
+        }
+        .alert-box {
+            background: #000000;
+            color: #ffffff;
+            border: 4px solid #000000;
+            padding: 20px;
+            text-align: center;
+            margin-top: 16px;
+        }
+        .alert-box h2 {
+            margin: 0 0 8px 0;
+            font-size: 28px;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 12px;
+            border-top: 2px solid #000000;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .footer a {
+            color: #000000;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Countdown Timer</h1>
+        <div style="font-size: 13px;">Kindle &amp; Low-Power Edition · 1s Screen Refresh</div>
+    </div>
+
+    <div class="nav-links">
+        <a class="nav-link" href="kindle.html">Kindle Home</a>
+        <a class="nav-link" href="stopwatch-kindle.html">Stopwatch</a>
+        <a class="nav-link active" href="countdown-timer-kindle.html">Countdown Timer</a>
+        <a class="nav-link" href="countdown-timer.html">Full Modern UI &rarr;</a>
+    </div>
+
+    <!-- Main Display -->
+    <div class="display-box">
+        <div id="countdownDisplay" class="time-text">25:00</div>
+        <div id="statusLabel" class="status-text">[ READY ]</div>
+
+        <!-- High contrast progress bar -->
+        <div class="progress-container">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+        <div id="percentLabel" class="progress-label">100% remaining</div>
+    </div>
+
+    <!-- Actions -->
+    <div class="btn-row">
+        <button id="btnStartPause" class="btn btn-primary">Start</button>
+        <button id="btnReset" class="btn" disabled>Reset</button>
+        <button id="btnAdd1" class="btn btn-small">+1 min</button>
+        <button id="btnAdd5" class="btn btn-small">+5 min</button>
+    </div>
+
+    <!-- Time's Up Alert Banner -->
+    <div id="alertBox" class="alert-box" style="display: none;">
+        <h2>*** TIME'S UP! ***</h2>
+        <p style="font-size: 16px; margin: 8px 0 16px 0;">Your countdown has completed.</p>
+        <button id="btnDismiss" class="btn" style="background: #ffffff; color: #000000; font-size: 16px; padding: 10px 24px;">Dismiss</button>
+    </div>
+
+    <!-- Quick Presets -->
+    <div class="section-box">
+        <h3>QUICK PRESETS</h3>
+        <div>
+            <button class="btn btn-preset active" data-min="25">🍅 25m Pomodoro</button>
+            <button class="btn btn-preset" data-min="5">☕ 5m Break</button>
+            <button class="btn btn-preset" data-min="15">🌿 15m Long Break</button>
+            <button class="btn btn-preset" data-min="1">1m</button>
+            <button class="btn btn-preset" data-min="3">3m</button>
+            <button class="btn btn-preset" data-min="10">10m</button>
+            <button class="btn btn-preset" data-min="30">30m</button>
+            <button class="btn btn-preset" data-min="45">45m</button>
+            <button class="btn btn-preset" data-min="60">60m</button>
+        </div>
+    </div>
+
+    <!-- Custom Duration -->
+    <div class="section-box">
+        <h3>CUSTOM DURATION</h3>
+        <div style="margin: 8px 0;">
+            <label style="margin-right: 12px; font-weight: bold;">
+                Minutes:
+                <input type="number" id="inputMinutes" value="25" min="0" max="999" style="width: 60px; font-size: 16px; padding: 4px; border: 2px solid #000;">
+            </label>
+            <label style="margin-right: 12px; font-weight: bold;">
+                Seconds:
+                <input type="number" id="inputSeconds" value="0" min="0" max="59" style="width: 50px; font-size: 16px; padding: 4px; border: 2px solid #000;">
+            </label>
+            <button id="btnSetCustom" class="btn btn-small" style="font-weight: bold;">Set</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span>utilities · Kindle Edition</span>
+        <span><a href="countdown-timer.html">Open Modern Version</a></span>
+    </div>
+</div>
+
+<script>
+// Pure ES3/ES5 JavaScript for universal compatibility on older Kindles
+(function() {
+    var totalDurationMs = 25 * 60 * 1000;
+    var remainingMs = totalDurationMs;
+    var isRunning = false;
+    var endTime = 0;
+    var timerInterval = null;
+
+    var countdownDisplay = document.getElementById("countdownDisplay");
+    var statusLabel = document.getElementById("statusLabel");
+    var progressBar = document.getElementById("progressBar");
+    var percentLabel = document.getElementById("percentLabel");
+    var btnStartPause = document.getElementById("btnStartPause");
+    var btnReset = document.getElementById("btnReset");
+    var btnAdd1 = document.getElementById("btnAdd1");
+    var btnAdd5 = document.getElementById("btnAdd5");
+    var alertBox = document.getElementById("alertBox");
+    var btnDismiss = document.getElementById("btnDismiss");
+    var inputMinutes = document.getElementById("inputMinutes");
+    var inputSeconds = document.getElementById("inputSeconds");
+    var btnSetCustom = document.getElementById("btnSetCustom");
+    var presetButtons = document.querySelectorAll ? document.querySelectorAll(".btn-preset") : [];
+
+    function pad(num) {
+        return (num < 10 ? "0" : "") + num;
+    }
+
+    function formatTime(ms) {
+        if (ms < 0) ms = 0;
+        var totalSec = Math.ceil(ms / 1000);
+        var s = totalSec % 60;
+        var totalMin = Math.floor(totalSec / 60);
+        var m = totalMin % 60;
+        var h = Math.floor(totalMin / 60);
+
+        if (h > 0) {
+            return pad(h) + ":" + pad(m) + ":" + pad(s);
+        }
+        return pad(m) + ":" + pad(s);
+    }
+
+    function getNowMs() {
+        return new Date().getTime();
+    }
+
+    function updateDisplay(ms) {
+        countdownDisplay.innerHTML = formatTime(ms);
+
+        var ratio = totalDurationMs > 0 ? (ms / totalDurationMs) : 0;
+        if (ratio < 0) ratio = 0;
+        if (ratio > 1) ratio = 1;
+
+        var pct = Math.round(ratio * 100);
+        progressBar.style.width = pct + "%";
+        percentLabel.innerHTML = pct + "% remaining";
+    }
+
+    function startTimer() {
+        if (remainingMs <= 0) {
+            remainingMs = totalDurationMs;
+        }
+        dismissAlert();
+        isRunning = true;
+        endTime = getNowMs() + remainingMs;
+
+        statusLabel.innerHTML = "[ RUNNING ]";
+        btnStartPause.innerHTML = "Pause";
+        btnStartPause.className = "btn";
+        btnReset.disabled = false;
+
+        timerInterval = setInterval(function() {
+            var now = getNowMs();
+            remainingMs = endTime - now;
+            if (remainingMs <= 0) {
+                remainingMs = 0;
+                triggerComplete();
+            } else {
+                updateDisplay(remainingMs);
+            }
+        }, 1000);
+    }
+
+    function pauseTimer() {
+        if (!isRunning) return;
+        isRunning = false;
+        clearInterval(timerInterval);
+        timerInterval = null;
+        remainingMs = endTime - getNowMs();
+        if (remainingMs < 0) remainingMs = 0;
+
+        statusLabel.innerHTML = "[ PAUSED ]";
+        btnStartPause.innerHTML = "Resume";
+        btnStartPause.className = "btn btn-primary";
+        updateDisplay(remainingMs);
+    }
+
+    function resetTimer() {
+        isRunning = false;
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+        dismissAlert();
+        remainingMs = totalDurationMs;
+        statusLabel.innerHTML = "[ READY ]";
+        btnStartPause.innerHTML = "Start";
+        btnStartPause.className = "btn btn-primary";
+        btnReset.disabled = true;
+        updateDisplay(remainingMs);
+    }
+
+    function triggerComplete() {
+        isRunning = false;
+        clearInterval(timerInterval);
+        timerInterval = null;
+
+        statusLabel.innerHTML = "[ TIME'S UP ]";
+        btnStartPause.innerHTML = "Restart";
+        btnStartPause.className = "btn btn-primary";
+        updateDisplay(0);
+        alertBox.style.display = "block";
+    }
+
+    function dismissAlert() {
+        alertBox.style.display = "none";
+    }
+
+    function setDuration(ms, activeBtn) {
+        isRunning = false;
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+        dismissAlert();
+        totalDurationMs = ms;
+        remainingMs = ms;
+
+        var totalSec = Math.floor(ms / 1000);
+        var s = totalSec % 60;
+        var m = Math.floor(totalSec / 60);
+        inputMinutes.value = m;
+        inputSeconds.value = s;
+
+        for (var i = 0; i < presetButtons.length; i++) {
+            presetButtons[i].className = "btn btn-preset";
+        }
+        if (activeBtn) {
+            activeBtn.className = "btn btn-preset active";
+        }
+
+        statusLabel.innerHTML = "[ READY ]";
+        btnStartPause.innerHTML = "Start";
+        btnStartPause.className = "btn btn-primary";
+        btnReset.disabled = true;
+        updateDisplay(remainingMs);
+    }
+
+    function addMinutes(min) {
+        var addMs = min * 60 * 1000;
+        totalDurationMs += addMs;
+        remainingMs += addMs;
+        if (isRunning) {
+            endTime += addMs;
+        }
+        updateDisplay(remainingMs);
+    }
+
+    // Controls
+    btnStartPause.onclick = function() {
+        if (isRunning) {
+            pauseTimer();
+        } else {
+            startTimer();
+        }
+    };
+
+    btnReset.onclick = function() {
+        resetTimer();
+    };
+
+    btnAdd1.onclick = function() {
+        addMinutes(1);
+    };
+
+    btnAdd5.onclick = function() {
+        addMinutes(5);
+    };
+
+    btnDismiss.onclick = function() {
+        dismissAlert();
+    };
+
+    // Presets
+    for (var i = 0; i < presetButtons.length; i++) {
+        (function(btn) {
+            btn.onclick = function() {
+                var m = parseInt(btn.getAttribute("data-min"), 10);
+                if (m > 0) {
+                    setDuration(m * 60 * 1000, btn);
+                }
+            };
+        })(presetButtons[i]);
+    }
+
+    // Custom duration
+    btnSetCustom.onclick = function() {
+        var m = parseInt(inputMinutes.value, 10) || 0;
+        var s = parseInt(inputSeconds.value, 10) || 0;
+        var total = (m * 60 + s) * 1000;
+        if (total > 0) {
+            setDuration(total, null);
+        } else {
+            alert("Please enter a duration greater than zero.");
+        }
+    };
+
+    // Keyboard support
+    document.onkeydown = function(e) {
+        var key = e.keyCode || e.which;
+        if (key === 32) { // Space
+            if (isRunning) pauseTimer(); else startTimer();
+            if (e.preventDefault) e.preventDefault();
+            return false;
+        }
+        if (key === 82 || key === 114) { // R
+            resetTimer();
+        }
+    };
+
+    updateDisplay(remainingMs);
+})();
+</script>
+
+</body>
+</html>
